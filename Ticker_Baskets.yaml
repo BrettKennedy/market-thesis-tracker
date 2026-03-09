@@ -1,0 +1,36 @@
+AI_INFRA:
+  benchmark:
+    - QQQ
+    - SOXX
+  core:
+    - VRT
+    - ETN
+    - ANET
+    - PWR
+  torque:
+    - AAOI
+    - ALAB
+    - CRDO
+    - LITE
+    - COHR
+  canaries:
+    - DLR
+    - EQIX
+    - SMCI
+
+SAAS_SHAKEOUT:
+  benchmark:
+    - QQQ
+  resilient:
+    - MSFT
+    - ORCL
+    - CRM
+    - NOW
+  vulnerable:
+    - SNOW
+    - DDOG
+    - MDB
+    - TWLO
+  canaries:
+    - HUBS
+    - ADBE
