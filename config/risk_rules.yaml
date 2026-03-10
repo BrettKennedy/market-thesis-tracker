@@ -1,0 +1,11 @@
+# Operating constraints aligned with docs/Investment_Policy.md.
+# TODO: finalize numeric values for your own risk tolerance.
+
+max_core_position_pct: 5.0
+max_torque_position_pct: 3.0
+max_initial_torque_position_pct: 2.0
+min_cash_reserve_pct: 20.0
+max_cash_reserve_pct: 40.0
+requires_checklist_before_decision: true
+requires_monthly_theme_review: true
+requires_post_earnings_review_for_material_changes: true

@@ -1,0 +1,12 @@
+Perform a narrative-drift audit against canonical theme statements.
+
+Inputs:
+- themes/Themes.md
+- Recent monthly reviews in reviews/monthly/
+- Recent earnings reviews in reviews/earnings/
+
+Output:
+- List where language drifted from the canonical thesis
+- Identify unsupported assumptions
+- Flag contradictions and missing disconfirming evidence
+- Provide a short remediation checklist

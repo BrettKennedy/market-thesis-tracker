@@ -1,0 +1,19 @@
+You are preparing a weekly thematic investing research digest.
+
+Inputs:
+- Canonical themes: themes/Themes.md
+- Basket definitions: config/Ticker_Baskets.yaml
+- Recent decisions/predictions: reviews/decisions/Prediction_Log.md
+- New evidence: local raw/processed data provided by operator
+
+Output format:
+1. Theme-by-theme status summary (no price-only conclusions)
+2. Evidence that strengthened each thesis
+3. Evidence that weakened each thesis
+4. Open questions for next week
+5. Suggested review priorities (not trade instructions)
+
+Constraints:
+- No trade execution advice
+- No hidden ranking formulas
+- Call out uncertainty explicitly

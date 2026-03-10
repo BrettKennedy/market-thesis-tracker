@@ -1,0 +1,34 @@
+# macOS
+.DS_Store
+
+# Python cache/build
+__pycache__/
+*.py[cod]
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+dist/
+build/
+
+# Virtual envs / local env files
+.venv/
+.env
+.env.*
+
+# Local databases and derived artifacts
+*.db
+*.sqlite
+*.sqlite3
+data/processed/*.db
+
+# Generated outputs (keep folder placeholder)
+outputs/*
+!outputs/.gitkeep
+
+# Optional local raw snapshots
+# data/raw/*.json
+# data/raw/*.jsonl

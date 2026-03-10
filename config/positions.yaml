@@ -1,0 +1,15 @@
+# Local position tracking (manual updates).
+# TODO: replace placeholder values with real sleeve-level data.
+
+as_of: "YYYY-MM-DD"
+base_currency: "USD"
+thematic_sleeve:
+  target_weight_pct: 0.0
+  cash_reserve_pct: 0.0
+positions:
+  - ticker: "EXAMPLE"
+    theme: "Theme name"
+    basket_role: "core"
+    shares: 0
+    cost_basis: 0.0
+    notes: "TODO"

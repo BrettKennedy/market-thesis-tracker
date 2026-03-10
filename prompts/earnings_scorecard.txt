@@ -1,0 +1,10 @@
+Use templates/Company_Earnings_Scorecard_Template.md as the required structure.
+
+Task:
+- Evaluate whether earnings information strengthens or weakens the active theme.
+- Keep analysis evidence-based and tied to current thesis language.
+- Do not infer strategy changes without explicit supporting evidence.
+
+Constraints:
+- No broker actions or trade automation
+- No unsupported narrative leaps
