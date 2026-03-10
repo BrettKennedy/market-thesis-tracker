@@ -49,9 +49,9 @@ YYYY-MM-DD
 ## 2) What Changed Since Last Review
 
 ### Important New Evidence
-- 
-- 
-- 
+-
+-
+-
 
 ### Evidence Type
 For each major item above, label it as one of:
@@ -72,17 +72,17 @@ For each major item above, state whether it is:
 
 ## 3) What Still Holds
 
-- 
-- 
-- 
+-
+-
+-
 
 ---
 
 ## 4) What Is Weakening
 
-- 
-- 
-- 
+-
+-
+-
 
 Do not soften this section with excuses. If a key pillar weakened, say so plainly.
 
@@ -91,14 +91,14 @@ Do not soften this section with excuses. If a key pillar weakened, say so plainl
 ## 5) Confirmation vs. Disconfirmation Review
 
 ### Confirmation Signals Observed This Month
-- 
-- 
-- 
+-
+-
+-
 
 ### Disconfirming Signals Observed This Month
-- 
-- 
-- 
+-
+-
+-
 
 ### Did Two Major Disconfirming Signals Fire in the Same Review Cycle?
 - Yes
@@ -118,32 +118,32 @@ Score each category 0, 1, or 2.
 ### Category 1: Demand Breadth or Winner Separation
 Score: [0 / 1 / 2]
 Reason:
-- 
+-
 
 ### Category 2: Fundamental Evidence Quality
 Score: [0 / 1 / 2]
 Reason:
-- 
+-
 
 ### Category 3: Margin / Unit Economics Quality
 Score: [0 / 1 / 2]
 Reason:
-- 
+-
 
 ### Category 4: Management Language Drift
 Score: [0 / 1 / 2]
 Reason:
-- 
+-
 
 ### Category 5: Counterevidence
 Score: [0 / 1 / 2]
 Reason:
-- 
+-
 
 ### Category 6: Market Reaction in Context
 Score: [0 / 1 / 2]
 Reason:
-- 
+-
 
 ### Total Score
 [0 to 12]
@@ -159,26 +159,26 @@ Reason:
 ## 7) Best Current Expressions of the Theme
 
 ### Benchmark
-- 
+-
 
 ### Core
-- 
-- 
+-
+-
 
 ### Torque
-- 
-- 
+-
+-
 
 ### Canary
-- 
-- 
+-
+-
 
 ### Remove
-- 
+-
 
 For any change from last month, explain why:
-- 
-- 
+-
+-
 
 ---
 
@@ -195,9 +195,9 @@ List the most relevant basket updates.
 
 ## 9) Strongest Reasons the Theme Could Still Fail
 
-- 
-- 
-- 
+-
+-
+-
 
 This section is mandatory even when the score improves.
 
@@ -213,32 +213,32 @@ This section is mandatory even when the score improves.
 - Watch only
 
 ### What Action Follows From This Score?
-- 
-- 
+-
+-
 
 ### Are New Adds Allowed?
 - Yes
 - No
 
 ### If Yes, Which Names Deserve New Attention?
-- 
-- 
+-
+-
 
 ### If No, What Would Need to Improve First?
-- 
-- 
+-
+-
 
 ---
 
 ## 11) What Would Change My Mind Next Month?
 
 ### Evidence That Would Improve the Score
-- 
-- 
+-
+-
 
 ### Evidence That Would Lower the Score
-- 
-- 
+-
+-
 
 ### Next Review Date
 YYYY-MM-DD
@@ -267,4 +267,4 @@ Before closing the review, answer these plainly:
 - No
 
 If yes, name it and explain why it still belongs:
-- 
+-

@@ -29,6 +29,8 @@ data/processed/*.db
 outputs/*
 !outputs/.gitkeep
 
-# Optional local raw snapshots
-# data/raw/*.json
-# data/raw/*.jsonl
+# Local raw snapshots (keep folder placeholders)
+data/raw/news/*
+!data/raw/news/.gitkeep
+data/raw/sec/*
+!data/raw/sec/.gitkeep

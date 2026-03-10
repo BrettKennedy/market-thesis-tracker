@@ -13,6 +13,7 @@ app = typer.Typer(add_completion=False)
 console = Console()
 BASE_DIR = Path(__file__).resolve().parents[1]
 
+
 @app.command()
 def main(
     theme: str = typer.Option(..., help="Theme name exactly as tracked in themes/Themes.md"),

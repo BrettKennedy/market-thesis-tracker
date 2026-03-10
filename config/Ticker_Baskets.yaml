@@ -1,4 +1,4 @@
-AI_INFRA:
+"AI Infrastructure Buildout Is Durable":
   benchmark:
     - VRT
     - ANET
@@ -20,7 +20,7 @@ AI_INFRA:
     - COHR
   remove: []
 
-SAAS_SHAKEOUT:
+"SaaS Shakeout Is Real but Selective":
   benchmark:
     - NOW
     - CRM

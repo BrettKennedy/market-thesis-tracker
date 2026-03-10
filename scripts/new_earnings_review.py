@@ -13,6 +13,7 @@ app = typer.Typer(add_completion=False)
 console = Console()
 BASE_DIR = Path(__file__).resolve().parents[1]
 
+
 @app.command()
 def main(
     ticker: str = typer.Option(..., help="Ticker symbol, e.g., VRT"),
@@ -43,7 +44,9 @@ def main(
 
     output_path.write_text(content, encoding="utf-8")
     console.print(f"[green]Created earnings review:[/green] {output_path}")
-    console.print("[cyan]TODO:[/cyan] complete scorecard sections after reviewing source materials.")
+    console.print(
+        "[cyan]TODO:[/cyan] complete scorecard sections after reviewing source materials."
+    )
 
 
 if __name__ == "__main__":

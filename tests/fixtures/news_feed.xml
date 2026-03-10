@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Test Feed</title>
+    <item>
+      <title>VRT expands AI cooling capacity</title>
+      <link>https://example.com/vrt-ai-cooling</link>
+      <description>VRT announced additional cooling systems for AI deployments.</description>
+      <pubDate>Tue, 09 Mar 2026 12:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>Macro update</title>
+      <link>https://example.com/macro-update</link>
+      <description>Broad market context without tracked ticker mentions.</description>
+      <pubDate>Mon, 08 Mar 2026 12:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>

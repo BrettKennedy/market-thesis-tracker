@@ -35,30 +35,30 @@ YYYY-MM-DD
 [Low / Medium / High]
 
 ### Why I Believe It
-- 
-- 
-- 
+-
+-
+-
 
 ### Best Expressions
-- 
-- 
+-
+-
 
 ### Why This Name Instead of Another Expression
-- 
-- 
+-
+-
 
 ### Main Risks / Counter-Narrative
-- 
-- 
-- 
+-
+-
+-
 
 ### What Would Prove Me Wrong
-- 
-- 
-- 
+-
+-
+-
 
 ### Valuation / Crowding Note
-- 
+-
 
 ### Review Date
 YYYY-MM-DD
@@ -67,9 +67,9 @@ YYYY-MM-DD
 [Leave blank initially]
 
 ### What Actually Happened
-- 
-- 
-- 
+-
+-
+-
 
 ### Was I Right?
 - Yes
@@ -82,9 +82,9 @@ YYYY-MM-DD
 - No
 
 ### What Did I Miss?
-- 
-- 
-- 
+-
+-
+-
 
 ### Process Lesson
 [What rule, checklist item, or scoring method should change based on this?]
@@ -147,20 +147,20 @@ Medium
 ### Outcome Review
 
 ### What Actually Happened
-- 
-- 
-- 
+-
+-
+-
 
 ### Was I Right?
-- 
+-
 
 ### Was I Right for the Right Reasons?
-- 
+-
 
 ### What Did I Miss?
-- 
-- 
-- 
+-
+-
+-
 
 ### Process Lesson
 -

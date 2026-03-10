@@ -65,13 +65,20 @@ uv sync
 uv run pre-commit install
 ```
 
-## Running Starter Scripts
+4. Validate the local setup:
+
+```bash
+uv run pytest
+uv run pre-commit run --all-files
+```
+
+## Running Core Scripts
 
 Use `uv run python ...` from repo root.
 
 ```bash
-uv run python scripts/ingest_sec.py
-uv run python scripts/ingest_news.py
+uv run python scripts/ingest_news.py --feed https://www.sec.gov/news/pressreleases.rss --limit 5
+MARKET_THESIS_SEC_USER_AGENT="market-thesis-tracker/0.1 your-email@example.com" uv run python scripts/ingest_sec.py --ticker VRT --limit 5
 uv run python scripts/build_weekly_digest.py
 uv run python scripts/new_monthly_review.py --theme "AI Infrastructure Buildout Is Durable"
 uv run python scripts/new_earnings_review.py --ticker VRT --theme "AI Infrastructure Buildout Is Durable"
@@ -83,6 +90,8 @@ uv run python scripts/new_decision_review.py --ticker VRT --theme "AI Infrastruc
 - Monthly theme review: `scripts/new_monthly_review.py` -> `reviews/monthly/`
 - Earnings scorecard: `scripts/new_earnings_review.py` -> `reviews/earnings/`
 - Decision checklist: `scripts/new_decision_review.py` -> `reviews/decisions/`
+- News/SEC ingestion: writes raw JSONL snapshots under `data/raw/` and normalized event rows into `data/processed/research.db`
+- Reporting scripts: read the latest reviews plus SQLite events and write disposable markdown to `outputs/`
 
 All generators copy from canonical files in `templates/`.
 
@@ -100,8 +109,8 @@ All generators copy from canonical files in `templates/`.
 - Always-on services, schedulers, workflow engines
 - Vector DBs, agent frameworks, frontend stacks, Docker, or Airflow
 
-## Current TODO Boundaries
+## Remaining TODO Boundaries
 
-- Fill `config/positions.yaml` with your real positions/sleeve sizing.
-- Fill `config/risk_rules.yaml` with your final operating constraints.
-- Replace script placeholders with your preferred data sources and review heuristics.
+- Fill `config/positions.yaml` with your actual live holdings and sleeve target weight.
+- Replace the bootstrap baseline reviews with current primary-source earnings and filing work.
+- Set a real SEC user-agent string in `MARKET_THESIS_SEC_USER_AGENT` before relying on SEC ingestion.

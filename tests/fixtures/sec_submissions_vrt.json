@@ -1,0 +1,12 @@
+{
+  "cik": "1884082",
+  "name": "Vertiv Holdings Co",
+  "filings": {
+    "recent": {
+      "form": ["10-Q", "8-K"],
+      "filingDate": ["2026-02-20", "2026-01-15"],
+      "accessionNumber": ["0001884082-26-000010", "0001884082-26-000005"],
+      "primaryDocument": ["vrt-20260220x10q.htm", "vrt-20260115x8k.htm"]
+    }
+  }
+}

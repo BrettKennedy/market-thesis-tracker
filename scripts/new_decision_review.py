@@ -13,11 +13,14 @@ app = typer.Typer(add_completion=False)
 console = Console()
 BASE_DIR = Path(__file__).resolve().parents[1]
 
+
 @app.command()
 def main(
     ticker: str = typer.Option(..., help="Ticker symbol"),
     theme: str = typer.Option(..., help="Theme name"),
-    decision_type: str = typer.Option(..., "--decision-type", help="Buy/Add/Hold/Trim/Cut/Watch only"),
+    decision_type: str = typer.Option(
+        ..., "--decision-type", help="Buy/Add/Hold/Trim/Cut/Watch only"
+    ),
     date: str = typer.Option(None, help="Decision date in YYYY-MM-DD. Defaults to today."),
 ) -> None:
     """Create reviews/decisions/<date>_<ticker>_<decision>.md from decision checklist."""
@@ -35,7 +38,9 @@ def main(
     template_path = BASE_DIR / "templates" / "Decision_Checklist.md"
     output_dir = BASE_DIR / "reviews" / "decisions"
     output_dir.mkdir(parents=True, exist_ok=True)
-    output_path = output_dir / f"{as_of}_{ticker_up}_{slugify(decision_type)}.md"
+    output_path = (
+        output_dir / f"{as_of}_{ticker_up}_{slugify(canonical_theme)}_{slugify(decision_type)}.md"
+    )
 
     if output_path.exists():
         console.print(f"[red]File already exists:[/red] {output_path}")

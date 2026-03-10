@@ -9,44 +9,34 @@ The point is not to summarize the quarter. The point is to determine whether the
 ## Review Header
 
 ### Review Date
-YYYY-MM-DD
+2026-03-10
 
 ### Company
-[Ticker / company name]
+VRT
 
 ### Theme
-[Theme name]
+AI Infrastructure Buildout Is Durable
 
 ### Basket Role Going Into Print
-- benchmark
 - core
-- torque
-- canary
-- remove
 
 ### Source Set Used
-- Earnings release
-- Shareholder letter / supplemental
-- Earnings call transcript
-- SEC filing
-- Other:
+- Other: repository bootstrap baseline; current quarter earnings packet not yet attached
 
 ---
 
 ## 1) What Changed
 
 ### Most Important New Information
--
--
--
+- No VRT earnings release, call transcript, or filing package has been ingested into the repo yet.
+- VRT remains a core basket role in the canonical AI infrastructure basket.
+- This file establishes the company review record and the evidence standard before any add/trim decision.
 
 ### Is This Mainly Company-Specific or Theme-Relevant?
-- Mostly company-specific
 - Mixed
-- Mostly theme-relevant
 
 ### One-Sentence Bottom Line
-[What actually changed, stripped of management spin]
+Without current quarter materials in the repo, the disciplined posture is neutral and watchful rather than an upgrade or downgrade.
 
 ---
 
@@ -60,141 +50,125 @@ Score each category from 1 to 5.
 - 5 = very strong
 
 ### Revenue / Demand
-Score: [1 to 5]
+Score: 3
 What matters:
 - Revenue growth vs prior trend
 - Bookings, orders, RPO, backlog, utilization, or customer adds where relevant
 - Strength by product or segment
 Notes:
--
+- No current-quarter packet is attached yet, so this score is a neutral bootstrap baseline.
 
 ### Margin Trajectory
-Score: [1 to 5]
+Score: 3
 What matters:
 - Gross margin direction
 - Operating leverage or deterioration
 - Quality of margin improvement
 Notes:
--
+- Margin quality has not been re-underwritten for the current quarter.
 
 ### Opex Discipline
-Score: [1 to 5]
+Score: 3
 What matters:
 - Headcount growth
 - Sales and marketing efficiency
 - R&D intensity vs payoff
 - Whether spending discipline looks durable or cosmetic
 Notes:
--
+- No new company materials were reviewed in this bootstrap cycle.
 
 ### Cash Flow / Balance Sheet
-Score: [1 to 5]
+Score: 3
 What matters:
 - Free cash flow quality
 - Capex burden
 - Net cash / debt position
 - Dilution, SBC burden, financing dependence
 Notes:
--
+- Balance-sheet quality remains unrefreshed until current filings are attached.
 
 ### Customer Concentration / Mix Risk
-Score: [1 to 5]
+Score: 3
 What matters:
 - Single-customer risk
 - Hyperscaler exposure
 - Sector concentration
 - Exposure to weaker end markets
 Notes:
--
+- Customer concentration risk has not been updated with fresh disclosures.
 
 ### Guidance
-Score: [1 to 5]
+Score: 3
 What matters:
 - Guide up, in-line, or guide down
 - Credibility of the guide
 - Magnitude of implied deceleration or acceleration
 Notes:
--
+- Current guidance has not been reviewed yet.
 
 ### Management Language Drift
-Score: [1 to 5]
+Score: 3
 What matters:
 - More specific or more vague?
 - More confident or more defensive?
 - New caveats appearing?
 - Repetition of buzzwords without evidence?
 Notes:
--
+- Management language cannot be scored above mixed until a current transcript is reviewed.
 
 ### Total Score
-[7 to 35]
+21
 
 ### Score Interpretation
-- 30 to 35 = materially strengthens the case
-- 24 to 29 = solid, thesis intact
 - 18 to 23 = mixed, watch closely
-- 12 to 17 = weak, basket role should be challenged
-- 7 to 11 = thesis risk or company-specific break
 
 ---
 
 ## 3) Theme Read-Through
 
 ### What This Quarter Says About the Theme
-- Strengthens the theme
 - Neutral / mixed for the theme
-- Weakens the theme
 
 ### Why
--
--
--
+- No current-quarter evidence has been reviewed in the repo yet.
+- VRT still matters to the thesis, but this file should not be used to justify new capital without live materials.
 
 ### Is This a Clean Read-Through or a Noisy One?
-- Clean
-- Somewhat noisy
 - Very noisy
 
 If noisy, explain why:
--
+- The repository does not yet contain the current quarter's primary-source packet.
 
 ---
 
 ## 4) What Still Holds
 
--
--
+- VRT remains a direct expression of the power and cooling layer in the AI infrastructure thesis.
+- The basket still treats VRT as a core exposure rather than a canary or remove candidate.
 
 ## 5) What Is Weakening
 
--
--
+- No current-quarter evidence has been reviewed yet.
+- Any conviction upgrade would be process-undisciplined at this stage.
 
 ## 6) Strongest Counter-Narrative After the Print
 
--
--
--
+- AI infrastructure demand could normalize faster than expected.
+- Orders could prove front-loaded rather than durable.
+- Without current materials, the repo cannot rule out weakening backlog or margin quality.
 
 ---
 
 ## 7) Market Reaction Check
 
 ### Immediate Market Reaction
-- Strongly positive
-- Modestly positive
 - Flat / mixed
-- Modestly negative
-- Strongly negative
 
 ### Was the Reaction Rational Relative to the Evidence?
-- Yes
 - Partly
-- No
 
 Why:
--
--
+- No market-reaction analysis is recorded yet, so this remains a placeholder baseline rather than a live verdict.
 
 Do not confuse a positive stock reaction with a good quarter.
 
@@ -203,65 +177,49 @@ Do not confuse a positive stock reaction with a good quarter.
 ## 8) Basket Role Review
 
 ### Current Role After the Print Should Be
-- benchmark
 - core
-- torque
-- canary
-- remove
 
 ### Keep / Promote / Demote / Remove?
 - Keep
-- Promote
-- Demote
-- Remove
 
 ### Why
--
--
--
+- VRT remains a direct thesis expression.
+- No current evidence in the repo justifies a role change.
+- Role changes should wait for live earnings and filing review.
 
 ### Better Replacement, If Any
--
+- None identified before a current review cycle is complete.
 
 ---
 
 ## 9) Capital Action
 
 ### Judgment
-- Buy more
-- Hold
-- Trim
-- Cut
 - Watch only
 
 ### What Would Have to Happen Next Quarter to Upgrade the View?
--
--
+- A current earnings packet must confirm durable demand or backlog support tied to AI infrastructure.
+- Management commentary must remain specific rather than promotional.
 
 ### What Would Force a Downgrade Next Quarter?
--
--
+- Demand language weakens materially.
+- Backlog, lead times, or margin quality deteriorate in the next live review.
 
 ### Next Review Date
-YYYY-MM-DD
+2026-04-10
 
 ---
 
 ## 10) Anti-Bias Check
 
 ### Am I excusing a weak result because I like the thesis?
-- Yes
 - No
 
 ### Am I overreacting to one quarter that may be noisy?
 - Yes
-- No
 
 ### Did I identify at least one piece of evidence that cuts against my preferred view?
 - Yes
-- No
 
 ### Would I initiate this name today based only on this quarter and current valuation?
-- Yes
-- No
 - Not enough evidence

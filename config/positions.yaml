@@ -1,15 +1,9 @@
 # Local position tracking (manual updates).
-# TODO: replace placeholder values with real sleeve-level data.
+# Keep `positions` empty until live holdings are configured.
 
-as_of: "YYYY-MM-DD"
+as_of: "2026-03-10"
 base_currency: "USD"
 thematic_sleeve:
-  target_weight_pct: 0.0
-  cash_reserve_pct: 0.0
-positions:
-  - ticker: "EXAMPLE"
-    theme: "Theme name"
-    basket_role: "core"
-    shares: 0
-    cost_basis: 0.0
-    notes: "TODO"
+  target_weight_pct:
+  cash_reserve_pct: 30.0
+positions: []

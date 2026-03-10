@@ -26,6 +26,15 @@ Use the repo in a simple sequence:
 5. Fill the review manually with evidence and disconfirming signals.
 6. Write disposable summaries to `outputs/` only after the review exists.
 
+## First 30 Minutes
+
+1. Run `uv sync`.
+2. Run `uv run pre-commit install`.
+3. Review `config/risk_rules.yaml` and confirm the default guardrails match how you want to operate.
+4. Open `config/positions.yaml`, set your sleeve target weight, and either fill live positions or leave `positions: []` until the sleeve is funded.
+5. Generate one monthly review, one earnings review, and one decision checklist.
+6. Run one local ingest command and then build one weekly digest.
+
 ## Core Commands
 
 Install dependencies and hooks:
@@ -61,6 +70,13 @@ uv run python scripts/build_post_earnings.py --ticker VRT
 uv run python scripts/narrative_drift.py
 ```
 
+For SEC ingestion, set a real user-agent string first:
+
+```bash
+export MARKET_THESIS_SEC_USER_AGENT="market-thesis-tracker/0.1 your-email@example.com"
+uv run python scripts/ingest_sec.py --ticker VRT --limit 5
+```
+
 ## Recommended Workflow
 
 When a theme changes:
@@ -86,6 +102,27 @@ Once per month:
 - Create one monthly review per active theme.
 - Update `reviews/decisions/Prediction_Log.md` with any major prediction that can be judged later.
 - Generate a weekly or monthly digest only after the underlying reviews are current.
+
+## Weekly Loop
+
+- Run `scripts/ingest_news.py` for the feeds you care about.
+- Review new rows in `data/raw/news/` only if the SQLite-backed digest points to something worth deeper work.
+- Refresh the relevant monthly review if the evidence set changed materially.
+- Build `outputs/weekly/weekly_digest_<date>.md` after the review work is current.
+
+## Post-Earnings Loop
+
+- Ingest the current SEC/fundamental inputs you care about.
+- Create a new earnings review with `scripts/new_earnings_review.py`.
+- Fill the scorecard from primary materials first.
+- Run `scripts/build_post_earnings.py --ticker <TICKER>` to produce a disposable summary for decision review.
+
+## Pre-Decision Loop
+
+- Confirm the latest monthly theme review exists and is current.
+- Confirm the relevant earnings review exists if the company recently reported.
+- Create a decision checklist with `scripts/new_decision_review.py`.
+- Compare the decision against `docs/Investment_Policy.md`, `config/risk_rules.yaml`, and `config/positions.yaml` before acting.
 
 ## Best Practices
 
@@ -124,9 +161,10 @@ Good constraints to include:
 ## What The Scripts Do Today
 
 - `scripts/new_*` create review documents from canonical templates.
-- `scripts/ingest_sec.py` writes placeholder SEC snapshot rows.
-- `scripts/ingest_news.py` writes raw RSS/news snapshots.
-- `scripts/build_weekly_digest.py` and `scripts/build_post_earnings.py` produce lightweight markdown stubs.
-- `scripts/narrative_drift.py` produces a lightweight audit stub.
+- `scripts/ingest_sec.py` writes raw SEC filing snapshots and normalized SQLite events.
+- `scripts/ingest_news.py` writes raw RSS/news snapshots and normalized SQLite events.
+- `scripts/build_weekly_digest.py` reads the latest monthly reviews plus local SQLite events and produces a weekly digest.
+- `scripts/build_post_earnings.py` reads the latest earnings review for a ticker and produces a disposable summary.
+- `scripts/narrative_drift.py` runs deterministic checks against canonical theme language and required review sections.
 
-Several scripts intentionally contain TODO markers. That is deliberate. They are scaffolding for a disciplined local workflow, not hidden strategy logic.
+The repo still uses conservative bootstrap examples. Replace them with live primary-source review work before using the system for real add/trim decisions.
