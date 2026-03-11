@@ -2,6 +2,18 @@
 
 This repository is a local-first research system for thematic investing. It is designed to help you keep thesis definitions, basket roles, reviews, and decisions consistent over time.
 
+## Start Here
+
+If this is a fresh clone, do these in order:
+
+1. Run `uv sync`.
+2. Run `uv run pre-commit install`.
+3. Replace the starter content in `themes/themes.md`.
+4. Align `config/ticker_baskets.yaml` to those exact theme names.
+5. Review `config/risk_rules.yaml`.
+6. Update `config/positions.yaml` or leave `positions: []` until funded.
+7. Generate one monthly review, one earnings review, and one decision checklist.
+
 ## What To Treat As Canonical
 
 These files define the system. Generated outputs should reference them, not replace them.
@@ -10,6 +22,8 @@ These files define the system. Generated outputs should reference them, not repl
 - `docs/Investment_Policy.md`
 - `themes/themes.md`
 - `config/ticker_baskets.yaml`
+- `config/positions.yaml`
+- `config/risk_rules.yaml`
 - `reviews/decisions/Prediction_Log.md`
 - `templates/Monthly_Theme_Review_Template.md`
 - `templates/Company_Earnings_Scorecard_Template.md`
@@ -21,18 +35,19 @@ Use the repo in a simple sequence:
 
 1. Read the current thesis language in `themes/themes.md`.
 2. Check basket roles in `config/ticker_baskets.yaml`.
-3. Add raw notes or fetched inputs into `data/raw/` if needed.
-4. Generate the relevant review document from the canonical template.
-5. Fill the review manually with evidence and disconfirming signals.
-6. Write disposable summaries to `outputs/` only after the review exists.
+3. Check `config/positions.yaml` and `config/risk_rules.yaml` if a decision may follow.
+4. Add raw notes or fetched inputs into `data/raw/` if needed.
+5. Generate the relevant review document from the canonical template.
+6. Fill the review manually with evidence and disconfirming signals.
+7. Write disposable summaries to `outputs/` only after the review exists.
 
 ## First 30 Minutes
 
 1. Run `uv sync`.
 2. Run `uv run pre-commit install`.
 3. Review `config/risk_rules.yaml` and confirm the default guardrails match how you want to operate.
-4. Open `themes/themes.md` and replace the placeholder theme blocks with your own.
-5. Open `config/ticker_baskets.yaml` and align the basket keys and tickers with your own framework.
+4. Open `themes/themes.md` and replace the starter theme sections with your own.
+5. Open `config/ticker_baskets.yaml` and align the basket keys and tickers with your framework.
 6. Open `config/positions.yaml`, set your sleeve target weight, and either fill live positions or leave `positions: []` until the sleeve is funded.
 7. Generate one monthly review, one earnings review, and one decision checklist.
 8. Run one local ingest command and then build one weekly digest.
@@ -80,6 +95,16 @@ uv run python scripts/ingest_sec.py --ticker VRT --limit 5
 ```
 
 ## Recommended Workflow
+
+The operating order matters:
+
+1. update canonical files
+2. create or refresh review documents
+3. ingest new source material
+4. generate disposable outputs
+5. make or revisit decisions
+
+Do not reverse that order unless you are deliberately doing exploratory work.
 
 When a theme changes:
 
@@ -129,6 +154,7 @@ Once per month:
 ## Best Practices
 
 - Keep one canonical name for each theme. Use the exact names from `themes/themes.md`.
+- Keep theme names plain and stable. Renaming a theme creates avoidable drift across reviews.
 - Treat `templates/` as durable forms and `reviews/` as completed records.
 - Treat `outputs/` as disposable summaries, not as source-of-truth analysis.
 - Record disconfirming evidence even when conviction is rising.
@@ -143,6 +169,7 @@ Good prompts:
 - "Read `themes/themes.md` and `config/ticker_baskets.yaml`, then draft a monthly review for Theme X using the exact structure from `templates/Monthly_Theme_Review_Template.md`."
 - "Read the latest earnings release and help me fill `reviews/earnings/...` without inventing facts or changing the thesis language."
 - "Compare this proposed decision against `docs/Investment_Policy.md`, `config/risk_rules.yaml`, and the latest monthly review."
+- "Given `config/positions.yaml` and `config/risk_rules.yaml`, point out where this draft decision would violate my own operating rules."
 
 Good constraints to include:
 

@@ -1,9 +1,30 @@
-# Replace these placeholders so the keys match the exact theme names in themes/themes.md.
+# Canonical basket file.
+#
+# Rules:
+# - Theme keys must exactly match the theme names in themes/themes.md.
+# - Use upper-case ticker symbols.
+# - Leave empty lists as [] rather than deleting keys.
+# - Use remove: for names you want explicitly out of consideration.
+#
+# Role guidance:
+# - benchmark: representative names for tracking the theme
+# - core: highest-conviction names if the theme is right
+# - torque: higher-beta or less-proven expressions
+# - canary: names likely to weaken first if the theme is deteriorating
+# - remove: names intentionally excluded despite prior relevance
+#
 # Optional private scratch copy: config/bk_ticker_baskets.yaml (gitignored).
 
-"[Theme Name]":
+"Replace With Your First Theme Name":
   benchmark:
-    - "[TICKER]"
+    - "TICKER"
+  core: []
+  torque: []
+  canary: []
+  remove: []
+
+"Optional Second Theme":
+  benchmark: []
   core: []
   torque: []
   canary: []

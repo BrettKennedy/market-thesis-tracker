@@ -6,6 +6,26 @@ This repository is for research, review cadence, and narrative tracking. It is *
 
 Start with [docs/User_Guide.md](docs/User_Guide.md) for day-to-day usage and [docs/Review_Workflow.md](docs/Review_Workflow.md) for the operating cadence.
 
+## Quick Start
+
+```bash
+uv sync
+uv run pre-commit install
+```
+
+Then personalize these two files first:
+
+- `themes/themes.md`
+- `config/ticker_baskets.yaml`
+
+After that, create your first review documents:
+
+```bash
+uv run python scripts/new_monthly_review.py --theme "<Theme Name>"
+uv run python scripts/new_earnings_review.py --ticker <TICKER> --theme "<Theme Name>"
+uv run python scripts/new_decision_review.py --ticker <TICKER> --theme "<Theme Name>" --decision-type Add
+```
+
 ## Purpose
 
 - Track durable market themes and supporting evidence.
@@ -21,6 +41,8 @@ These are the source-of-truth artifacts for this system:
 - `docs/Investment_Policy.md`
 - `themes/themes.md`
 - `config/ticker_baskets.yaml`
+- `config/positions.yaml`
+- `config/risk_rules.yaml`
 - `reviews/decisions/Prediction_Log.md`
 - `templates/Monthly_Theme_Review_Template.md`
 - `templates/Company_Earnings_Scorecard_Template.md`
@@ -87,9 +109,13 @@ uv run python scripts/new_decision_review.py --ticker <TICKER> --theme "<Theme N
 
 ## Theme And Basket Setup
 
-Edit `themes/themes.md` and replace the placeholder theme blocks with your own.
+Edit `themes/themes.md` and replace the starter sections with your actual theme definitions.
 
-Then edit `config/ticker_baskets.yaml` so the keys exactly match your theme names and the basket roles reflect your current framework.
+Then edit `config/ticker_baskets.yaml` so:
+
+- theme keys exactly match `themes/themes.md`
+- tickers are upper-case
+- empty categories remain as `[]`
 
 If you want private working copies of prior theme or basket files, keep them as `themes/bk_themes.md` and `config/bk_ticker_baskets.yaml`. Those files are gitignored and are not read by the scripts.
 
@@ -110,6 +136,15 @@ All generators copy from canonical files in `templates/`.
 - Paste generated outputs back into `reviews/` or `outputs/` with clear dates.
 - Require explicit evidence references to canonical docs/templates when making changes.
 
+Use prompts that point to the canonical files directly. Example:
+
+```text
+Read themes/themes.md, config/ticker_baskets.yaml, docs/Investment_Policy.md,
+and the latest monthly review for <Theme Name>. Help me draft an update using
+the existing template structure. Do not invent facts, score changes, or new
+strategy rules.
+```
+
 ## Intentionally Out of Scope
 
 - Trade execution and broker APIs
@@ -120,5 +155,5 @@ All generators copy from canonical files in `templates/`.
 ## Remaining TODO Boundaries
 
 - Fill `config/positions.yaml` with your actual live holdings and sleeve target weight.
-- Replace the bootstrap baseline reviews with current primary-source earnings and filing work.
+- Replace any bootstrap example reviews with current primary-source earnings and filing work.
 - Set a real SEC user-agent string in `MARKET_THESIS_SEC_USER_AGENT` before relying on SEC ingestion.

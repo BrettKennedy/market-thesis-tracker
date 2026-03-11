@@ -1,64 +1,73 @@
 # Themes
 
-Edit this file to define the exact themes your workflow tracks. The scripts require
-`themes/themes.md`, so keep the structure below intact and replace the placeholder
-content with your own.
+This is the required canonical theme file for the framework.
 
-## Theme 1: [Theme Name]
+Rules:
+- Keep each theme name stable once it is in use.
+- Use the exact same theme names in `config/ticker_baskets.yaml`.
+- Update this file before updating downstream reviews or outputs.
+- Delete any unused starter sections once you replace them with your own themes.
+
+## Theme 1: Replace With Your First Theme Name
 
 ### Thesis Statement
-[State the thesis in one paragraph. Include the expected time horizon and what should happen.]
+State the thesis in one paragraph.
+
+Include:
+- expected time horizon
+- what must happen for the thesis to be right
+- what would make the thesis meaningfully weaker
 
 ### Why This Matters
-[Explain why the theme is economically meaningful and worth tracking.]
+Explain why this theme deserves tracking and what decision it improves.
 
 ### Confirmation Signals
-- [Signal 1]
-- [Signal 2]
-- [Signal 3]
+- Concrete signal from filings, earnings, industry data, or primary-source commentary
+- Second concrete signal
+- Third concrete signal
 
 ### Disconfirming Signals
-- [Signal 1]
-- [Signal 2]
-- [Signal 3]
+- Concrete signal that would weaken or break the thesis
+- Second concrete signal
+- Third concrete signal
 
 ### Strongest Counter-Narrative
-[State the best argument against the thesis as clearly as possible.]
+Write the best argument against the thesis as clearly as possible.
 
 ### Benchmark
-- [Ticker]
-- [Ticker]
+- Ticker that best represents the theme
+- Optional second benchmark ticker
 
 ### Control / Canaries
-- [Ticker]
-- [Ticker]
+- Ticker or datapoint likely to weaken first if the thesis deteriorates
+- Optional second canary
 
 ---
 
-## Theme 2: [Optional Second Theme]
+## Theme 2: Replace Or Remove This Optional Theme
 
 ### Thesis Statement
-[State the thesis in one paragraph.]
+State the thesis in one paragraph.
 
 ### Why This Matters
-[Explain why the theme deserves tracking.]
+Explain why this theme is worth tracking.
 
 ### Confirmation Signals
-- [Signal 1]
-- [Signal 2]
+- Concrete signal
+- Concrete signal
 
 ### Disconfirming Signals
-- [Signal 1]
-- [Signal 2]
+- Concrete signal
+- Concrete signal
 
 ### Strongest Counter-Narrative
-[State the best argument against the thesis.]
+State the best argument against the thesis.
 
 ### Benchmark
-- [Ticker]
+- Ticker
 
 ### Control / Canaries
-- [Ticker]
+- Ticker
 
 ---
 

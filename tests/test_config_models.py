@@ -13,8 +13,8 @@ def test_repo_configs_parse(repo_root):
     positions = load_positions_config(repo_root / "config" / "positions.yaml")
     risk_rules = load_risk_rules(repo_root / "config" / "risk_rules.yaml")
 
-    assert "[Theme Name]" in baskets
-    assert baskets["[Theme Name]"].benchmark == ["[TICKER]"]
+    assert "Replace With Your First Theme Name" in baskets
+    assert baskets["Replace With Your First Theme Name"].benchmark == ["TICKER"]
     assert positions.positions == []
     assert positions.thematic_sleeve.cash_reserve_pct == 30.0
     assert risk_rules.max_core_position_pct == 5.0
