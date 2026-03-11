@@ -7,6 +7,25 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field
 
+THEMES_FILENAME = "themes.md"
+TICKER_BASKETS_FILENAME = "ticker_baskets.yaml"
+
+
+def get_themes_path(base_dir: Path) -> Path:
+    """Return the required tracked themes file and fail clearly if it is missing."""
+    themes_path = base_dir / "themes" / THEMES_FILENAME
+    if themes_path.exists():
+        return themes_path
+    raise FileNotFoundError(f"Missing required themes file at {themes_path}.")
+
+
+def get_ticker_baskets_path(base_dir: Path) -> Path:
+    """Return the required tracked basket file and fail clearly if it is missing."""
+    baskets_path = base_dir / "config" / TICKER_BASKETS_FILENAME
+    if baskets_path.exists():
+        return baskets_path
+    raise FileNotFoundError(f"Missing required ticker basket file at {baskets_path}.")
+
 
 def slugify(value: str) -> str:
     """Convert text into a filesystem-safe slug."""
@@ -14,7 +33,7 @@ def slugify(value: str) -> str:
 
 
 def load_canonical_theme_names(themes_path: Path) -> list[str]:
-    """Extract canonical theme names from themes/Themes.md headings."""
+    """Extract canonical theme names from the tracked themes file."""
     themes_text = themes_path.read_text(encoding="utf-8")
     names: list[str] = []
 

@@ -7,7 +7,8 @@ from pathlib import Path
 
 import typer
 from rich.console import Console
-from repo_helpers import normalize_theme_name, slugify
+
+from repo_helpers import get_themes_path, normalize_theme_name, slugify
 
 app = typer.Typer(add_completion=False)
 console = Console()
@@ -16,14 +17,14 @@ BASE_DIR = Path(__file__).resolve().parents[1]
 
 @app.command()
 def main(
-    theme: str = typer.Option(..., help="Theme name exactly as tracked in themes/Themes.md"),
+    theme: str = typer.Option(..., help="Theme name exactly as tracked in themes/themes.md"),
     date: str = typer.Option(None, help="Review date in YYYY-MM-DD. Defaults to today."),
 ) -> None:
     """Create reviews/monthly/<date>_<theme>.md from monthly template."""
     as_of = date or dt.date.today().isoformat()
     try:
-        canonical_theme = normalize_theme_name(theme, BASE_DIR / "themes" / "Themes.md")
-    except ValueError as exc:
+        canonical_theme = normalize_theme_name(theme, get_themes_path(BASE_DIR))
+    except (FileNotFoundError, ValueError) as exc:
         raise typer.BadParameter(str(exc)) from exc
 
     template_path = BASE_DIR / "templates" / "Monthly_Theme_Review_Template.md"

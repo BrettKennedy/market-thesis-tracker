@@ -92,7 +92,9 @@ def load_ticker_theme_map(path: Path) -> dict[str, list[str]]:
     theme_map: dict[str, list[str]] = {}
 
     for theme_name, basket in baskets.items():
-        for ticker in basket.benchmark + basket.core + basket.torque + basket.canary + basket.remove:
+        for ticker in (
+            basket.benchmark + basket.core + basket.torque + basket.canary + basket.remove
+        ):
             theme_map.setdefault(ticker, [])
             if theme_name not in theme_map[ticker]:
                 theme_map[ticker].append(theme_name)

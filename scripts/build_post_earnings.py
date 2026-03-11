@@ -10,7 +10,7 @@ from jinja2 import Template
 from rich.console import Console
 
 from data_store import default_db_path, read_events
-from repo_helpers import normalize_theme_name
+from repo_helpers import get_themes_path, normalize_theme_name
 from review_helpers import (
     extract_bullets,
     extract_first_meaningful_line,
@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parents[1]
 @app.command()
 def main(
     ticker: str = typer.Option(..., help="Ticker symbol, e.g., VRT"),
-    theme: str = typer.Option(None, help="Optional theme name from themes/Themes.md."),
+    theme: str = typer.Option(None, help="Optional theme name from themes/themes.md."),
     date: str = typer.Option(None, help="Report date (YYYY-MM-DD). Defaults to today."),
     db_path: Path = typer.Option(
         None, help="Optional SQLite path. Defaults to data/processed/research.db."
@@ -40,8 +40,8 @@ def main(
     canonical_theme = None
     if theme:
         try:
-            canonical_theme = normalize_theme_name(theme, BASE_DIR / "themes" / "Themes.md")
-        except ValueError as exc:
+            canonical_theme = normalize_theme_name(theme, get_themes_path(BASE_DIR))
+        except (FileNotFoundError, ValueError) as exc:
             raise typer.BadParameter(str(exc)) from exc
 
     latest_review = find_latest_earnings_review(

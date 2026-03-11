@@ -1,8 +1,8 @@
 You are preparing a weekly thematic investing research digest.
 
 Inputs:
-- Canonical themes: themes/Themes.md
-- Basket definitions: config/Ticker_Baskets.yaml
+- Active themes: themes/themes.md
+- Basket definitions: config/ticker_baskets.yaml
 - Recent decisions/predictions: reviews/decisions/Prediction_Log.md
 - New evidence: local raw/processed data provided by operator
 

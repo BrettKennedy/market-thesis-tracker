@@ -13,6 +13,7 @@ from rich.console import Console
 
 from config_models import load_ticker_theme_map, load_tracked_tickers
 from data_store import ResearchEvent, default_db_path, insert_events
+from repo_helpers import get_ticker_baskets_path
 
 app = typer.Typer(add_completion=False)
 console = Console()
@@ -123,11 +124,10 @@ def main(
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / f"news_snapshot_{as_of}.jsonl"
     db_path = db_path or default_db_path(BASE_DIR)
-    theme_map = load_ticker_theme_map(BASE_DIR / "config" / "Ticker_Baskets.yaml")
+    baskets_path = get_ticker_baskets_path(BASE_DIR)
+    theme_map = load_ticker_theme_map(baskets_path)
     tracked_tickers = (
-        {item.upper() for item in ticker}
-        if ticker
-        else set(load_tracked_tickers(BASE_DIR / "config" / "Ticker_Baskets.yaml"))
+        {item.upper() for item in ticker} if ticker else set(load_tracked_tickers(baskets_path))
     )
 
     rows: list[ResearchEvent] = []

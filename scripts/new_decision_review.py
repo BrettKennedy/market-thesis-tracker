@@ -7,7 +7,8 @@ from pathlib import Path
 
 import typer
 from rich.console import Console
-from repo_helpers import normalize_theme_name, slugify
+
+from repo_helpers import get_themes_path, normalize_theme_name, slugify
 
 app = typer.Typer(add_completion=False)
 console = Console()
@@ -31,8 +32,8 @@ def main(
         allowed = ", ".join(sorted(allowed_decisions))
         raise typer.BadParameter(f"Unknown decision type '{decision_type}'. Use one of: {allowed}")
     try:
-        canonical_theme = normalize_theme_name(theme, BASE_DIR / "themes" / "Themes.md")
-    except ValueError as exc:
+        canonical_theme = normalize_theme_name(theme, get_themes_path(BASE_DIR))
+    except (FileNotFoundError, ValueError) as exc:
         raise typer.BadParameter(str(exc)) from exc
 
     template_path = BASE_DIR / "templates" / "Decision_Checklist.md"

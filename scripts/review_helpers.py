@@ -94,9 +94,13 @@ def find_latest_review_for_theme(review_dir: Path, theme_name: str) -> Path | No
     return candidates[-1] if candidates else None
 
 
-def find_latest_earnings_review(review_dir: Path, ticker: str, theme_name: str | None = None) -> Path | None:
+def find_latest_earnings_review(
+    review_dir: Path, ticker: str, theme_name: str | None = None
+) -> Path | None:
     if theme_name:
-        candidates = sorted(review_dir.glob(f"*_{ticker.upper()}_{slugify(theme_name)}_earnings_review.md"))
+        candidates = sorted(
+            review_dir.glob(f"*_{ticker.upper()}_{slugify(theme_name)}_earnings_review.md")
+        )
     else:
         candidates = sorted(review_dir.glob(f"*_{ticker.upper()}_*.md"))
     return candidates[-1] if candidates else None

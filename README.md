@@ -19,8 +19,8 @@ These are the source-of-truth artifacts for this system:
 
 - `docs/README_Project_Goal.md`
 - `docs/Investment_Policy.md`
-- `themes/Themes.md`
-- `config/Ticker_Baskets.yaml`
+- `themes/themes.md`
+- `config/ticker_baskets.yaml`
 - `reviews/decisions/Prediction_Log.md`
 - `templates/Monthly_Theme_Review_Template.md`
 - `templates/Company_Earnings_Scorecard_Template.md`
@@ -78,12 +78,20 @@ Use `uv run python ...` from repo root.
 
 ```bash
 uv run python scripts/ingest_news.py --feed https://www.sec.gov/news/pressreleases.rss --limit 5
-MARKET_THESIS_SEC_USER_AGENT="market-thesis-tracker/0.1 your-email@example.com" uv run python scripts/ingest_sec.py --ticker VRT --limit 5
+MARKET_THESIS_SEC_USER_AGENT="market-thesis-tracker/0.1 your-email@example.com" uv run python scripts/ingest_sec.py --ticker <TICKER> --limit 5
 uv run python scripts/build_weekly_digest.py
-uv run python scripts/new_monthly_review.py --theme "AI Infrastructure Buildout Is Durable"
-uv run python scripts/new_earnings_review.py --ticker VRT --theme "AI Infrastructure Buildout Is Durable"
-uv run python scripts/new_decision_review.py --ticker VRT --theme "AI Infrastructure Buildout Is Durable" --decision-type Add
+uv run python scripts/new_monthly_review.py --theme "<Theme Name>"
+uv run python scripts/new_earnings_review.py --ticker <TICKER> --theme "<Theme Name>"
+uv run python scripts/new_decision_review.py --ticker <TICKER> --theme "<Theme Name>" --decision-type Add
 ```
+
+## Theme And Basket Setup
+
+Edit `themes/themes.md` and replace the placeholder theme blocks with your own.
+
+Then edit `config/ticker_baskets.yaml` so the keys exactly match your theme names and the basket roles reflect your current framework.
+
+If you want private working copies of prior theme or basket files, keep them as `themes/bk_themes.md` and `config/bk_ticker_baskets.yaml`. Those files are gitignored and are not read by the scripts.
 
 ## Generating Review Docs From Templates
 

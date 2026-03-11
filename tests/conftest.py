@@ -23,6 +23,12 @@ def temp_repo(tmp_path: Path, repo_root: Path) -> Path:
     for directory in ["config", "themes", "templates", "reviews", "docs", "prompts"]:
         shutil.copytree(repo_root / directory, tmp_path / directory, dirs_exist_ok=True)
 
+    shutil.copy2(repo_root / "tests" / "fixtures" / "themes.md", tmp_path / "themes" / "themes.md")
+    shutil.copy2(
+        repo_root / "tests" / "fixtures" / "ticker_baskets.yaml",
+        tmp_path / "config" / "ticker_baskets.yaml",
+    )
+
     for directory in [
         "data/raw/news",
         "data/raw/sec",

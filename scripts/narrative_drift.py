@@ -8,7 +8,7 @@ from pathlib import Path
 import typer
 from rich.console import Console
 
-from repo_helpers import ThemeDefinition, load_theme_definitions
+from repo_helpers import ThemeDefinition, get_themes_path, load_theme_definitions
 from review_helpers import (
     extract_bullets,
     extract_first_meaningful_line,
@@ -106,7 +106,7 @@ def main(
 ) -> None:
     """Generate outputs/narrative_drift_<date>.md."""
     as_of = date or dt.date.today().isoformat()
-    theme_definitions = load_theme_definitions(BASE_DIR / "themes" / "Themes.md")
+    theme_definitions = load_theme_definitions(get_themes_path(BASE_DIR))
     earnings_reviews = sorted((BASE_DIR / "reviews" / "earnings").glob("*.md"))
 
     output_path = BASE_DIR / "outputs" / f"narrative_drift_{as_of}.md"

@@ -36,7 +36,7 @@ YYYY-MM-DD
 ## 1) Thesis Snapshot
 
 ### Thesis Statement
-[Paste the current thesis statement exactly as written in themes/Themes.md]
+[Paste the current thesis statement exactly as written in themes/themes.md]
 
 ### Time Horizon
 [Usually 4 to 6 quarters unless explicitly changed]

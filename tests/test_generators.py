@@ -15,7 +15,9 @@ def test_monthly_review_generator_creates_expected_file(monkeypatch, temp_repo: 
 
     new_monthly_review.main(theme="ai infrastructure buildout is durable", date="2026-05-01")
 
-    output_path = temp_repo / "reviews" / "monthly" / "2026-05-01_ai_infrastructure_buildout_is_durable.md"
+    output_path = (
+        temp_repo / "reviews" / "monthly" / "2026-05-01_ai_infrastructure_buildout_is_durable.md"
+    )
     assert output_path.exists()
     assert "AI Infrastructure Buildout Is Durable" in output_path.read_text(encoding="utf-8")
 

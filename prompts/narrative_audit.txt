@@ -1,7 +1,7 @@
 Perform a narrative-drift audit against canonical theme statements.
 
 Inputs:
-- themes/Themes.md
+- themes/themes.md
 - Recent monthly reviews in reviews/monthly/
 - Recent earnings reviews in reviews/earnings/
 

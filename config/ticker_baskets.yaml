@@ -1,0 +1,10 @@
+# Replace these placeholders so the keys match the exact theme names in themes/themes.md.
+# Optional private scratch copy: config/bk_ticker_baskets.yaml (gitignored).
+
+"[Theme Name]":
+  benchmark:
+    - "[TICKER]"
+  core: []
+  torque: []
+  canary: []
+  remove: []

@@ -6,8 +6,8 @@ See `docs/User_Guide.md` for the practical day-to-day operating version of this 
 
 ## 1) Maintain Canonical Inputs
 
-- Update `themes/Themes.md` when thesis language changes.
-- Update `config/Ticker_Baskets.yaml` when basket roles change.
+- Update `themes/themes.md` when thesis language changes.
+- Update `config/ticker_baskets.yaml` when basket roles change.
 - Keep policy constraints aligned with `docs/Investment_Policy.md`.
 
 ## 2) Create Scheduled Review Documents

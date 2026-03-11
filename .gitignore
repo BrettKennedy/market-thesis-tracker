@@ -34,3 +34,7 @@ data/raw/news/*
 !data/raw/news/.gitkeep
 data/raw/sec/*
 !data/raw/sec/.gitkeep
+
+# Personal local copies
+themes/bk_themes.md
+config/bk_ticker_baskets.yaml

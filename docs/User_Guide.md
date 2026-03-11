@@ -8,8 +8,8 @@ These files define the system. Generated outputs should reference them, not repl
 
 - `docs/README_Project_Goal.md`
 - `docs/Investment_Policy.md`
-- `themes/Themes.md`
-- `config/Ticker_Baskets.yaml`
+- `themes/themes.md`
+- `config/ticker_baskets.yaml`
 - `reviews/decisions/Prediction_Log.md`
 - `templates/Monthly_Theme_Review_Template.md`
 - `templates/Company_Earnings_Scorecard_Template.md`
@@ -19,8 +19,8 @@ These files define the system. Generated outputs should reference them, not repl
 
 Use the repo in a simple sequence:
 
-1. Read the current thesis language in `themes/Themes.md`.
-2. Check basket roles in `config/Ticker_Baskets.yaml`.
+1. Read the current thesis language in `themes/themes.md`.
+2. Check basket roles in `config/ticker_baskets.yaml`.
 3. Add raw notes or fetched inputs into `data/raw/` if needed.
 4. Generate the relevant review document from the canonical template.
 5. Fill the review manually with evidence and disconfirming signals.
@@ -31,9 +31,11 @@ Use the repo in a simple sequence:
 1. Run `uv sync`.
 2. Run `uv run pre-commit install`.
 3. Review `config/risk_rules.yaml` and confirm the default guardrails match how you want to operate.
-4. Open `config/positions.yaml`, set your sleeve target weight, and either fill live positions or leave `positions: []` until the sleeve is funded.
-5. Generate one monthly review, one earnings review, and one decision checklist.
-6. Run one local ingest command and then build one weekly digest.
+4. Open `themes/themes.md` and replace the placeholder theme blocks with your own.
+5. Open `config/ticker_baskets.yaml` and align the basket keys and tickers with your own framework.
+6. Open `config/positions.yaml`, set your sleeve target weight, and either fill live positions or leave `positions: []` until the sleeve is funded.
+7. Generate one monthly review, one earnings review, and one decision checklist.
+8. Run one local ingest command and then build one weekly digest.
 
 ## Core Commands
 
@@ -47,19 +49,19 @@ uv run pre-commit install
 Create a monthly theme review:
 
 ```bash
-uv run python scripts/new_monthly_review.py --theme "AI Infrastructure Buildout Is Durable"
+uv run python scripts/new_monthly_review.py --theme "<Theme Name>"
 ```
 
 Create an earnings review:
 
 ```bash
-uv run python scripts/new_earnings_review.py --ticker VRT --theme "AI Infrastructure Buildout Is Durable"
+uv run python scripts/new_earnings_review.py --ticker <TICKER> --theme "<Theme Name>"
 ```
 
 Create a decision checklist:
 
 ```bash
-uv run python scripts/new_decision_review.py --ticker VRT --theme "AI Infrastructure Buildout Is Durable" --decision-type Add
+uv run python scripts/new_decision_review.py --ticker <TICKER> --theme "<Theme Name>" --decision-type Add
 ```
 
 Build disposable outputs:
@@ -81,8 +83,8 @@ uv run python scripts/ingest_sec.py --ticker VRT --limit 5
 
 When a theme changes:
 
-- Update `themes/Themes.md` first.
-- Update `config/Ticker_Baskets.yaml` if basket roles changed.
+- Update `themes/themes.md` first.
+- Update `config/ticker_baskets.yaml` if basket roles changed.
 - Do not patch downstream reviews first and backfill canonical files later.
 
 When a company reports earnings:
@@ -126,7 +128,7 @@ Once per month:
 
 ## Best Practices
 
-- Keep one canonical name for each theme. Use the exact names from `themes/Themes.md`.
+- Keep one canonical name for each theme. Use the exact names from `themes/themes.md`.
 - Treat `templates/` as durable forms and `reviews/` as completed records.
 - Treat `outputs/` as disposable summaries, not as source-of-truth analysis.
 - Record disconfirming evidence even when conviction is rising.
@@ -138,7 +140,7 @@ Once per month:
 
 Good prompts:
 
-- "Read `themes/Themes.md` and `config/Ticker_Baskets.yaml`, then draft a monthly review for Theme X using the exact structure from `templates/Monthly_Theme_Review_Template.md`."
+- "Read `themes/themes.md` and `config/ticker_baskets.yaml`, then draft a monthly review for Theme X using the exact structure from `templates/Monthly_Theme_Review_Template.md`."
 - "Read the latest earnings release and help me fill `reviews/earnings/...` without inventing facts or changing the thesis language."
 - "Compare this proposed decision against `docs/Investment_Policy.md`, `config/risk_rules.yaml`, and the latest monthly review."
 
@@ -151,7 +153,7 @@ Good constraints to include:
 
 ## Anti-Patterns
 
-- Letting an LLM rewrite `themes/Themes.md` casually.
+- Letting an LLM rewrite `themes/themes.md` casually without a deliberate thesis change.
 - Creating alternate templates outside `templates/`.
 - Using `outputs/` as if they were canonical records.
 - Making position decisions without a checklist and current theme review.

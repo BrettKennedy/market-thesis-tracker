@@ -11,7 +11,7 @@ from rich.console import Console
 
 from config_models import load_positions_config, load_risk_rules, load_ticker_baskets
 from data_store import default_db_path, read_events
-from repo_helpers import load_theme_definitions
+from repo_helpers import get_themes_path, get_ticker_baskets_path, load_theme_definitions
 from review_helpers import (
     extract_bullets,
     extract_first_meaningful_line,
@@ -86,8 +86,8 @@ def main(
 
     positions = load_positions_config(BASE_DIR / "config" / "positions.yaml")
     risk_rules = load_risk_rules(BASE_DIR / "config" / "risk_rules.yaml")
-    baskets = load_ticker_baskets(BASE_DIR / "config" / "Ticker_Baskets.yaml")
-    theme_definitions = load_theme_definitions(BASE_DIR / "themes" / "Themes.md")
+    baskets = load_ticker_baskets(get_ticker_baskets_path(BASE_DIR))
+    theme_definitions = load_theme_definitions(get_themes_path(BASE_DIR))
 
     theme_rows: list[dict[str, object]] = []
     for theme_name, theme_definition in theme_definitions.items():
