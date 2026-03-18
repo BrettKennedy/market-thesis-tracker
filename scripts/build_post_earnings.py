@@ -10,7 +10,7 @@ from jinja2 import Template
 from rich.console import Console
 
 from data_store import default_db_path, read_events
-from repo_helpers import get_themes_path, normalize_theme_name
+from repo_helpers import get_themes_path, normalize_theme_name, validate_date_str
 from review_helpers import (
     extract_bullets,
     extract_first_meaningful_line,
@@ -35,6 +35,8 @@ def main(
 ) -> None:
     """Create a markdown post-earnings summary from the latest review file."""
     as_of = date or dt.date.today().isoformat()
+    if date:
+        validate_date_str(as_of)
     ticker_up = ticker.upper()
     db_path = db_path or default_db_path(BASE_DIR)
     canonical_theme = None

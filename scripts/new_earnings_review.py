@@ -8,7 +8,7 @@ from pathlib import Path
 import typer
 from rich.console import Console
 
-from repo_helpers import get_themes_path, normalize_theme_name, slugify
+from repo_helpers import get_themes_path, normalize_theme_name, slugify, validate_date_str
 
 app = typer.Typer(add_completion=False)
 console = Console()
@@ -23,6 +23,8 @@ def main(
 ) -> None:
     """Create reviews/earnings/<date>_<ticker>_earnings_review.md from earnings template."""
     as_of = date or dt.date.today().isoformat()
+    if date:
+        validate_date_str(as_of)
     ticker_up = ticker.upper()
     try:
         canonical_theme = normalize_theme_name(theme, get_themes_path(BASE_DIR))

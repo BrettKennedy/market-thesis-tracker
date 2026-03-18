@@ -2,6 +2,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+from pydantic import ValidationError
+
 from data_store import ResearchEvent, insert_events, read_events
 
 
@@ -42,3 +45,23 @@ def test_insert_events_replaces_rows_for_the_same_snapshot(tmp_path: Path):
 
     assert len(rows) == 1
     assert rows[0].title == "Updated row"
+
+
+def test_research_event_rejects_invalid_event_date():
+    with pytest.raises(ValidationError, match="event_date must be YYYY-MM-DD"):
+        ResearchEvent(
+            source="test",
+            event_date="not-a-date",
+            event_type="test",
+            title="Bad date event",
+        )
+
+
+def test_research_event_strips_event_date_whitespace():
+    event = ResearchEvent(
+        source="test",
+        event_date="  2026-03-10  ",
+        event_type="test",
+        title="Whitespace date",
+    )
+    assert event.event_date == "2026-03-10"

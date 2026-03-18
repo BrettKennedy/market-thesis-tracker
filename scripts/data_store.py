@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import datetime as dt
 import json
 import sqlite3
 from pathlib import Path
@@ -21,6 +22,16 @@ class ResearchEvent(BaseModel):
     local_path: str | None = None
     summary: str | None = None
     raw_payload: dict[str, Any] | list[Any] | str | None = None
+
+    @field_validator("event_date")
+    @classmethod
+    def validate_event_date(cls, value: str) -> str:
+        stripped = value.strip()
+        try:
+            dt.date.fromisoformat(stripped)
+        except ValueError:
+            raise ValueError(f"event_date must be YYYY-MM-DD, got '{value}'") from None
+        return stripped
 
     @field_validator("ticker")
     @classmethod

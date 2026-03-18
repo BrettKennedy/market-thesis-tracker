@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import datetime as dt
+import logging
 from pathlib import Path
 from typing import Any
 
@@ -12,7 +13,14 @@ from rich.console import Console
 
 from config_models import load_ticker_theme_map, load_tracked_tickers
 from data_store import ResearchEvent, default_db_path, insert_events
-from repo_helpers import get_ticker_baskets_path
+from repo_helpers import (
+    get_ticker_baskets_path,
+    http_get_with_retry,
+    setup_logging,
+    validate_date_str,
+)
+
+logger = logging.getLogger(__name__)
 
 app = typer.Typer(add_completion=False)
 console = Console()
@@ -119,7 +127,10 @@ def main(
     ),
 ) -> None:
     """Fetch SEC submission metadata and persist local events."""
+    setup_logging()
     as_of = date or dt.date.today().isoformat()
+    if date:
+        validate_date_str(as_of)
     output_dir = BASE_DIR / "data" / "raw" / "sec"
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / f"sec_snapshot_{as_of}.jsonl"
@@ -134,8 +145,16 @@ def main(
     events: list[ResearchEvent] = []
 
     with httpx.Client(headers=headers, timeout=20.0, follow_redirects=True) as client:
-        company_tickers_payload = client.get(company_tickers_url)
-        company_tickers_payload.raise_for_status()
+        logger.info("Fetching SEC company tickers from %s", company_tickers_url)
+        try:
+            company_tickers_payload = http_get_with_retry(client, company_tickers_url)
+        except (
+            httpx.HTTPStatusError,
+            httpx.ConnectError,
+            httpx.TimeoutException,
+        ) as exc:
+            console.print(f"[red]Failed to fetch SEC company tickers:[/red] {exc}")
+            raise typer.Exit(code=1) from exc
         ticker_map = build_company_ticker_map(company_tickers_payload.json())
 
         for ticker_value in selected_tickers:
@@ -147,8 +166,17 @@ def main(
                 continue
 
             submissions_url = DEFAULT_SEC_SUBMISSIONS_URL.format(cik=cik)
-            response = client.get(submissions_url)
-            response.raise_for_status()
+            logger.info("Fetching submissions for %s (CIK %s)", ticker_value, cik)
+            try:
+                response = http_get_with_retry(client, submissions_url)
+            except (
+                httpx.HTTPStatusError,
+                httpx.ConnectError,
+                httpx.TimeoutException,
+            ) as exc:
+                logger.warning("Skipping %s: %s", ticker_value, exc)
+                console.print(f"[yellow]Skipping {ticker_value} due to fetch error:[/yellow] {exc}")
+                continue
             submissions = response.json()
             events.extend(
                 build_filing_events(

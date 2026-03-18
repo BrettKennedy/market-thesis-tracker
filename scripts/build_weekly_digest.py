@@ -11,7 +11,12 @@ from rich.console import Console
 
 from config_models import load_positions_config, load_risk_rules, load_ticker_baskets
 from data_store import default_db_path, read_events
-from repo_helpers import get_themes_path, get_ticker_baskets_path, load_theme_definitions
+from repo_helpers import (
+    get_themes_path,
+    get_ticker_baskets_path,
+    load_theme_definitions,
+    validate_date_str,
+)
 from review_helpers import (
     extract_bullets,
     extract_first_meaningful_line,
@@ -78,6 +83,8 @@ def main(
 ) -> None:
     """Generate outputs/weekly/weekly_digest_<date>.md."""
     as_of = date or dt.date.today().isoformat()
+    if date:
+        validate_date_str(as_of)
     output_dir = BASE_DIR / "outputs" / "weekly"
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / f"weekly_digest_{as_of}.md"

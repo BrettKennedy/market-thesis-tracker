@@ -8,7 +8,7 @@ from pathlib import Path
 import typer
 from rich.console import Console
 
-from repo_helpers import get_themes_path, normalize_theme_name, slugify
+from repo_helpers import get_themes_path, normalize_theme_name, slugify, validate_date_str
 
 app = typer.Typer(add_completion=False)
 console = Console()
@@ -26,6 +26,8 @@ def main(
 ) -> None:
     """Create reviews/decisions/<date>_<ticker>_<decision>.md from decision checklist."""
     as_of = date or dt.date.today().isoformat()
+    if date:
+        validate_date_str(as_of)
     ticker_up = ticker.upper()
     allowed_decisions = {"Buy", "Add", "Hold", "Trim", "Cut", "Watch only"}
     if decision_type not in allowed_decisions:
