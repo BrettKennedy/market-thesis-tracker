@@ -4,11 +4,14 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import logging
 import sqlite3
 from pathlib import Path
 from typing import Any
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, ValidationError, field_validator
+
+logger = logging.getLogger(__name__)
 
 
 class ResearchEvent(BaseModel):
@@ -189,19 +192,26 @@ def read_events(
         else:
             parsed_payload = None
 
-        events.append(
-            ResearchEvent(
-                source=row[0],
-                event_date=row[1],
-                ticker=row[2],
-                theme=row[3],
-                event_type=row[4],
-                title=row[5],
-                url=row[6],
-                local_path=row[7],
-                summary=row[8],
-                raw_payload=parsed_payload,
+        try:
+            events.append(
+                ResearchEvent(
+                    source=row[0],
+                    event_date=row[1],
+                    ticker=row[2],
+                    theme=row[3],
+                    event_type=row[4],
+                    title=row[5],
+                    url=row[6],
+                    local_path=row[7],
+                    summary=row[8],
+                    raw_payload=parsed_payload,
+                )
             )
-        )
+        except ValidationError:
+            logger.warning(
+                "Skipping stored event with invalid data (title=%r, date=%r)",
+                row[5],
+                row[1],
+            )
 
     return events

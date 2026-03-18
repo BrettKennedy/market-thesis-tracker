@@ -143,8 +143,8 @@ def http_get_with_retry(
 ) -> httpx.Response:
     """GET with retry on transient network errors.
 
-    Retries on connection and timeout errors with exponential backoff.
-    Does not retry HTTP status errors (4xx/5xx).
+    Retries on transport errors (connection, timeout, read, protocol)
+    with exponential backoff.  Does not retry HTTP status errors (4xx/5xx).
     """
     last_exc: Exception | None = None
     for attempt in range(max_attempts):
@@ -152,7 +152,7 @@ def http_get_with_retry(
             response = client.get(url)
             response.raise_for_status()
             return response
-        except (httpx.ConnectError, httpx.TimeoutException) as exc:
+        except httpx.TransportError as exc:
             last_exc = exc
             if attempt < max_attempts - 1:
                 time.sleep(backoff_base * 2**attempt)

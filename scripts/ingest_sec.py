@@ -148,11 +148,7 @@ def main(
         logger.info("Fetching SEC company tickers from %s", company_tickers_url)
         try:
             company_tickers_payload = http_get_with_retry(client, company_tickers_url)
-        except (
-            httpx.HTTPStatusError,
-            httpx.ConnectError,
-            httpx.TimeoutException,
-        ) as exc:
+        except (httpx.HTTPStatusError, httpx.TransportError) as exc:
             console.print(f"[red]Failed to fetch SEC company tickers:[/red] {exc}")
             raise typer.Exit(code=1) from exc
         ticker_map = build_company_ticker_map(company_tickers_payload.json())

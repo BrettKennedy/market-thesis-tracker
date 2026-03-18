@@ -147,11 +147,7 @@ def main(
             logger.info("Fetching feed %s", feed_url)
             try:
                 response = http_get_with_retry(client, feed_url)
-            except (
-                httpx.HTTPStatusError,
-                httpx.ConnectError,
-                httpx.TimeoutException,
-            ) as exc:
+            except (httpx.HTTPStatusError, httpx.TransportError) as exc:
                 logger.warning("Skipping feed %s: %s", feed_url, exc)
                 console.print(
                     f"[yellow]Skipping feed due to fetch error[/yellow] {feed_url}: {exc}"
