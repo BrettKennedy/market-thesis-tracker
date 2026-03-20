@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import datetime as dt
+import email.utils
 import logging
 import re
 import time
@@ -123,6 +124,38 @@ def normalize_theme_name(raw_theme: str, themes_path: Path) -> str:
 
     valid = ", ".join(canonical_names)
     raise ValueError(f"Unknown theme '{raw_theme}'. Use one of: {valid}")
+
+
+logger = logging.getLogger(__name__)
+
+
+def normalize_date_str(value: str, *, fallback: str) -> str:
+    """Best-effort conversion of *value* to an ISO ``YYYY-MM-DD`` string.
+
+    Tries ``fromisoformat`` first, then RFC 2822 (the standard RSS date
+    format) via :func:`email.utils.parsedate_to_datetime`.  Returns
+    *fallback* when the string cannot be parsed at all.
+    """
+    stripped = value.strip()
+    if not stripped:
+        return fallback
+
+    # Fast path: already ISO
+    try:
+        dt.date.fromisoformat(stripped)
+        return stripped
+    except ValueError:
+        pass
+
+    # RFC 2822 / RFC 5322 (e.g. "Mon, 10 Mar 2026 12:00:00 GMT")
+    try:
+        parsed = email.utils.parsedate_to_datetime(stripped)
+        return parsed.date().isoformat()
+    except (ValueError, TypeError):
+        pass
+
+    logger.warning("Unparseable date '%s', using fallback '%s'", value, fallback)
+    return fallback
 
 
 def validate_date_str(value: str) -> str:

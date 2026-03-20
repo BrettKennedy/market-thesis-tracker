@@ -10,6 +10,7 @@ from repo_helpers import (
     http_get_with_retry,
     load_canonical_theme_names,
     load_theme_definitions,
+    normalize_date_str,
     normalize_theme_name,
     validate_date_str,
 )
@@ -39,6 +40,24 @@ def test_load_theme_definitions_extracts_thesis_text(repo_root):
     assert definitions["SaaS Shakeout Is Real but Selective"].thesis_statement.startswith(
         "Over the next 4 to 6 quarters, AI does not break software broadly."
     )
+
+
+def test_normalize_date_str_passes_iso_through():
+    assert normalize_date_str("2026-03-10", fallback="2026-01-01") == "2026-03-10"
+
+
+def test_normalize_date_str_converts_rfc2822():
+    assert (
+        normalize_date_str("Mon, 10 Mar 2026 12:00:00 GMT", fallback="2026-01-01") == "2026-03-10"
+    )
+
+
+def test_normalize_date_str_returns_fallback_for_garbage():
+    assert normalize_date_str("not-a-date", fallback="2026-01-01") == "2026-01-01"
+
+
+def test_normalize_date_str_returns_fallback_for_empty():
+    assert normalize_date_str("", fallback="2026-01-01") == "2026-01-01"
 
 
 def test_validate_date_str_accepts_valid_date():

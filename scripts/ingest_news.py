@@ -17,6 +17,7 @@ from data_store import ResearchEvent, default_db_path, insert_events
 from repo_helpers import (
     get_ticker_baskets_path,
     http_get_with_retry,
+    normalize_date_str,
     setup_logging,
     validate_date_str,
 )
@@ -65,7 +66,10 @@ def build_news_events(
             published = entry.get("published_parsed")
             event_date = dt.date(published.tm_year, published.tm_mon, published.tm_mday).isoformat()
         else:
-            event_date = str(entry.get("published", "")).strip() or fallback_date
+            raw_date = str(entry.get("published", "")).strip()
+            event_date = (
+                normalize_date_str(raw_date, fallback=fallback_date) if raw_date else fallback_date
+            )
         link = str(entry.get("link", "")).strip() or None
         matched_tickers = detect_tickers(combined_text, tracked_tickers)
 
