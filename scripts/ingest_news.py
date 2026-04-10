@@ -10,8 +10,6 @@ from pathlib import Path
 import feedparser
 import httpx
 import typer
-from rich.console import Console
-
 from config_models import load_ticker_theme_map, load_tracked_tickers
 from data_store import ResearchEvent, default_db_path, insert_events
 from repo_helpers import (
@@ -21,15 +19,18 @@ from repo_helpers import (
     setup_logging,
     validate_date_str,
 )
+from rich.console import Console
 
 logger = logging.getLogger(__name__)
 
 app = typer.Typer(add_completion=False)
 console = Console()
 BASE_DIR = Path(__file__).resolve().parents[1]
+# SEC press-release feed is safe as a default since it's theme-agnostic.
+# The Yahoo Finance feed included here is an EXAMPLE only — replace the ticker
+# list with symbols from your own basket before using it in production.
 DEFAULT_FEEDS = [
     "https://www.sec.gov/news/pressreleases.rss",
-    "https://feeds.finance.yahoo.com/rss/2.0/headline?s=MSFT,CRM,NOW&region=US&lang=en-US",
 ]
 
 

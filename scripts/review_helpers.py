@@ -71,6 +71,10 @@ def has_heading(text: str, heading: str) -> bool:
 
 
 def is_meaningful_text(value: str) -> bool:
+    """Return True when *value* contains user-authored content.
+
+    Rejects empty strings, placeholder tokens, and unfilled template brackets.
+    """
     stripped = value.strip()
     if not stripped:
         return False
@@ -80,8 +84,6 @@ def is_meaningful_text(value: str) -> bool:
         return False
     if stripped.startswith("[") and stripped.endswith("]"):
         return False
-    if stripped in {"Yes", "No", "Maybe", "Partly", "Clean", "Mixed", "Noisy"}:
-        return True
     return True
 
 
@@ -103,4 +105,9 @@ def find_latest_earnings_review(
         )
     else:
         candidates = sorted(review_dir.glob(f"*_{ticker.upper()}_*.md"))
+    return candidates[-1] if candidates else None
+
+
+def find_latest_decision_review(review_dir: Path, ticker: str, theme_name: str) -> Path | None:
+    candidates = sorted(review_dir.glob(f"*_{ticker.upper()}_{slugify(theme_name)}_*.md"))
     return candidates[-1] if candidates else None

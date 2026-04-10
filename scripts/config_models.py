@@ -6,8 +6,7 @@ from pathlib import Path
 from typing import Literal
 
 import yaml
-from pydantic import BaseModel, Field, field_validator
-
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 BasketRole = Literal["benchmark", "core", "torque", "canary", "remove"]
 
@@ -22,6 +21,8 @@ def _normalize_ticker(value: str) -> str:
 
 
 class ThemeBasket(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     benchmark: list[str] = Field(default_factory=list)
     core: list[str] = Field(default_factory=list)
     torque: list[str] = Field(default_factory=list)
@@ -39,11 +40,13 @@ class ThemeBasket(BaseModel):
 
 
 class ThematicSleeve(BaseModel):
-    target_weight_pct: float | None = None
-    cash_reserve_pct: float | None = None
+    target_weight_pct: float | None = Field(default=None, ge=0, le=100)
+    cash_reserve_pct: float | None = Field(default=None, ge=0, le=100)
 
 
 class Position(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     ticker: str
     theme: str
     basket_role: BasketRole
@@ -63,6 +66,8 @@ class Position(BaseModel):
 
 
 class PositionsConfig(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     as_of: str
     base_currency: str
     thematic_sleeve: ThematicSleeve
@@ -70,6 +75,8 @@ class PositionsConfig(BaseModel):
 
 
 class RiskRules(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     max_core_position_pct: float
     max_torque_position_pct: float
     max_initial_torque_position_pct: float

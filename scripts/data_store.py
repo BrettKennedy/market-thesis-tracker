@@ -86,6 +86,10 @@ def insert_events(db_path: Path, events: list[ResearchEvent]) -> int:
     if not events:
         return 0
 
+    # Deduplicate rows that share a (source, local_path) snapshot key.
+    # Events without a local_path are not part of a snapshot batch and are
+    # inserted without prior deletion; callers that omit local_path should
+    # ensure they are not re-inserting stale data.
     snapshot_keys = {(event.source, event.local_path) for event in events if event.local_path}
     with sqlite3.connect(db_path) as conn:
         for source, local_path in snapshot_keys:
@@ -179,11 +183,12 @@ def read_events(
     params.append(limit)
 
     with sqlite3.connect(db_path) as conn:
+        conn.row_factory = sqlite3.Row
         rows = conn.execute(query, params).fetchall()
 
     events: list[ResearchEvent] = []
     for row in rows:
-        payload = row[9]
+        payload = row["raw_payload"]
         if payload:
             try:
                 parsed_payload: dict[str, Any] | list[Any] | str = json.loads(payload)
@@ -195,23 +200,23 @@ def read_events(
         try:
             events.append(
                 ResearchEvent(
-                    source=row[0],
-                    event_date=row[1],
-                    ticker=row[2],
-                    theme=row[3],
-                    event_type=row[4],
-                    title=row[5],
-                    url=row[6],
-                    local_path=row[7],
-                    summary=row[8],
+                    source=row["source"],
+                    event_date=row["event_date"],
+                    ticker=row["ticker"],
+                    theme=row["theme"],
+                    event_type=row["event_type"],
+                    title=row["title"],
+                    url=row["url"],
+                    local_path=row["local_path"],
+                    summary=row["summary"],
                     raw_payload=parsed_payload,
                 )
             )
         except ValidationError:
             logger.warning(
                 "Skipping stored event with invalid data (title=%r, date=%r)",
-                row[5],
-                row[1],
+                row["title"],
+                row["event_date"],
             )
 
     return events

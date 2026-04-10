@@ -130,31 +130,24 @@ logger = logging.getLogger(__name__)
 
 
 def normalize_date_str(value: str, *, fallback: str) -> str:
-    """Best-effort conversion of *value* to an ISO ``YYYY-MM-DD`` string.
-
-    Tries ``fromisoformat`` first, then RFC 2822 (the standard RSS date
-    format) via :func:`email.utils.parsedate_to_datetime`.  Returns
-    *fallback* when the string cannot be parsed at all.
-    """
+    """Best-effort conversion of *value* to an ISO ``YYYY-MM-DD`` string."""
     stripped = value.strip()
     if not stripped:
         return fallback
 
-    # Fast path: already ISO
     try:
         dt.date.fromisoformat(stripped)
         return stripped
     except ValueError:
         pass
 
-    # RFC 2822 / RFC 5322 (e.g. "Mon, 10 Mar 2026 12:00:00 GMT")
     try:
         parsed = email.utils.parsedate_to_datetime(stripped)
         return parsed.date().isoformat()
-    except (ValueError, TypeError):
+    except (TypeError, ValueError):
         pass
 
-    logger.warning("Unparseable date '%s', using fallback '%s'", value, fallback)
+    logger.warning("Unparseable date %r, using fallback %r", value, fallback)
     return fallback
 
 
@@ -174,11 +167,7 @@ def http_get_with_retry(
     max_attempts: int = 3,
     backoff_base: float = 1.0,
 ) -> httpx.Response:
-    """GET with retry on transient network errors.
-
-    Retries on transport errors (connection, timeout, read, protocol)
-    with exponential backoff.  Does not retry HTTP status errors (4xx/5xx).
-    """
+    """GET with retry on transient transport errors."""
     last_exc: Exception | None = None
     for attempt in range(max_attempts):
         try:

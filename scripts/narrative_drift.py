@@ -6,22 +6,16 @@ import datetime as dt
 from pathlib import Path
 
 import typer
-from rich.console import Console
-
-from repo_helpers import (
-    ThemeDefinition,
-    get_themes_path,
-    load_theme_definitions,
-    validate_date_str,
-)
+from repo_helpers import ThemeDefinition, get_themes_path, load_theme_definitions
 from review_helpers import (
     extract_bullets,
     extract_first_meaningful_line,
-    extract_selected_option,
     extract_section,
+    extract_selected_option,
     find_latest_review_for_theme,
     has_heading,
 )
+from rich.console import Console
 
 app = typer.Typer(add_completion=False)
 console = Console()
@@ -96,7 +90,8 @@ def audit_earnings_review(review_path: Path) -> list[str]:
     anti_bias = extract_selected_option(
         extract_section(
             text,
-            "### Did I identify at least one piece of evidence that cuts against my preferred view?",
+            "### Did I identify at least one piece of evidence that cuts against my "
+            "preferred view?",
         )
     )
     if not anti_bias:
@@ -111,8 +106,6 @@ def main(
 ) -> None:
     """Generate outputs/narrative_drift_<date>.md."""
     as_of = date or dt.date.today().isoformat()
-    if date:
-        validate_date_str(as_of)
     theme_definitions = load_theme_definitions(get_themes_path(BASE_DIR))
     earnings_reviews = sorted((BASE_DIR / "reviews" / "earnings").glob("*.md"))
 

@@ -2,12 +2,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-import typer
-
 import new_decision_review
 import new_earnings_review
 import new_monthly_review
+import pytest
+import typer
 
 
 def test_monthly_review_generator_creates_expected_file(monkeypatch, temp_repo: Path):
