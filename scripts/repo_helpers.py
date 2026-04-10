@@ -2,9 +2,15 @@
 
 from __future__ import annotations
 
+import datetime as dt
+import email.utils
+import logging
 import re
+import time
 from pathlib import Path
 
+import httpx
+import typer
 from pydantic import BaseModel, Field
 
 THEMES_FILENAME = "themes.md"
@@ -118,3 +124,67 @@ def normalize_theme_name(raw_theme: str, themes_path: Path) -> str:
 
     valid = ", ".join(canonical_names)
     raise ValueError(f"Unknown theme '{raw_theme}'. Use one of: {valid}")
+
+
+logger = logging.getLogger(__name__)
+
+
+def normalize_date_str(value: str, *, fallback: str) -> str:
+    """Best-effort conversion of *value* to an ISO ``YYYY-MM-DD`` string."""
+    stripped = value.strip()
+    if not stripped:
+        return fallback
+
+    try:
+        dt.date.fromisoformat(stripped)
+        return stripped
+    except ValueError:
+        pass
+
+    try:
+        parsed = email.utils.parsedate_to_datetime(stripped)
+        return parsed.date().isoformat()
+    except (TypeError, ValueError):
+        pass
+
+    logger.warning("Unparseable date %r, using fallback %r", value, fallback)
+    return fallback
+
+
+def validate_date_str(value: str) -> str:
+    """Validate an ISO date string, raising typer.BadParameter on failure."""
+    try:
+        dt.date.fromisoformat(value)
+    except ValueError:
+        raise typer.BadParameter(f"Invalid date '{value}'. Use YYYY-MM-DD format.") from None
+    return value
+
+
+def http_get_with_retry(
+    client: httpx.Client,
+    url: str,
+    *,
+    max_attempts: int = 3,
+    backoff_base: float = 1.0,
+) -> httpx.Response:
+    """GET with retry on transient transport errors."""
+    last_exc: Exception | None = None
+    for attempt in range(max_attempts):
+        try:
+            response = client.get(url)
+            response.raise_for_status()
+            return response
+        except httpx.TransportError as exc:
+            last_exc = exc
+            if attempt < max_attempts - 1:
+                time.sleep(backoff_base * 2**attempt)
+    raise last_exc  # type: ignore[misc]
+
+
+def setup_logging(verbose: bool = False) -> None:
+    """Configure root logger with a standard format."""
+    logging.basicConfig(
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+        level=logging.DEBUG if verbose else logging.INFO,
+    )

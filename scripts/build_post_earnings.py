@@ -6,18 +6,17 @@ import datetime as dt
 from pathlib import Path
 
 import typer
-from jinja2 import Template
-from rich.console import Console
-
 from data_store import default_db_path, read_events
+from jinja2 import Template
 from repo_helpers import get_themes_path, normalize_theme_name
 from review_helpers import (
     extract_bullets,
     extract_first_meaningful_line,
-    extract_selected_option,
     extract_section,
+    extract_selected_option,
     find_latest_earnings_review,
 )
+from rich.console import Console
 
 app = typer.Typer(add_completion=False)
 console = Console()

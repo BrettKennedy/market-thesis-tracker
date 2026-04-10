@@ -6,9 +6,8 @@ import datetime as dt
 from pathlib import Path
 
 import typer
-from rich.console import Console
-
 from repo_helpers import get_themes_path, normalize_theme_name, slugify
+from rich.console import Console
 
 app = typer.Typer(add_completion=False)
 console = Console()

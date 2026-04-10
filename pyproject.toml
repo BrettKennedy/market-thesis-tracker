@@ -28,5 +28,11 @@ package = false
 [tool.ruff]
 line-length = 100
 
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "W"]
+ignore = [
+  "B008",  # do not perform function calls in default arguments (typer pattern)
+]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]

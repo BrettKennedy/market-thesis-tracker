@@ -3,24 +3,34 @@
 from __future__ import annotations
 
 import datetime as dt
+import logging
 import re
 from pathlib import Path
 
 import feedparser
 import httpx
 import typer
-from rich.console import Console
-
 from config_models import load_ticker_theme_map, load_tracked_tickers
 from data_store import ResearchEvent, default_db_path, insert_events
-from repo_helpers import get_ticker_baskets_path
+from repo_helpers import (
+    get_ticker_baskets_path,
+    http_get_with_retry,
+    normalize_date_str,
+    setup_logging,
+    validate_date_str,
+)
+from rich.console import Console
+
+logger = logging.getLogger(__name__)
 
 app = typer.Typer(add_completion=False)
 console = Console()
 BASE_DIR = Path(__file__).resolve().parents[1]
+# SEC press-release feed is safe as a default since it's theme-agnostic.
+# The Yahoo Finance feed included here is an EXAMPLE only — replace the ticker
+# list with symbols from your own basket before using it in production.
 DEFAULT_FEEDS = [
     "https://www.sec.gov/news/pressreleases.rss",
-    "https://feeds.finance.yahoo.com/rss/2.0/headline?s=MSFT,CRM,NOW&region=US&lang=en-US",
 ]
 
 
@@ -57,7 +67,10 @@ def build_news_events(
             published = entry.get("published_parsed")
             event_date = dt.date(published.tm_year, published.tm_mon, published.tm_mday).isoformat()
         else:
-            event_date = str(entry.get("published", "")).strip() or fallback_date
+            raw_date = str(entry.get("published", "")).strip()
+            event_date = (
+                normalize_date_str(raw_date, fallback=fallback_date) if raw_date else fallback_date
+            )
         link = str(entry.get("link", "")).strip() or None
         matched_tickers = detect_tickers(combined_text, tracked_tickers)
 
@@ -118,8 +131,11 @@ def main(
     ),
 ) -> None:
     """Fetch RSS entries and store both raw snapshots and SQLite events."""
+    setup_logging()
     feeds = feed or DEFAULT_FEEDS
     as_of = date or dt.date.today().isoformat()
+    if date:
+        validate_date_str(as_of)
     output_dir = BASE_DIR / "data" / "raw" / "news"
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / f"news_snapshot_{as_of}.jsonl"
@@ -133,10 +149,11 @@ def main(
     rows: list[ResearchEvent] = []
     with httpx.Client(timeout=20.0, follow_redirects=True) as client:
         for feed_url in feeds:
+            logger.info("Fetching feed %s", feed_url)
             try:
-                response = client.get(feed_url)
-                response.raise_for_status()
-            except Exception as exc:  # noqa: BLE001
+                response = http_get_with_retry(client, feed_url)
+            except (httpx.HTTPStatusError, httpx.TransportError) as exc:
+                logger.warning("Skipping feed %s: %s", feed_url, exc)
                 console.print(
                     f"[yellow]Skipping feed due to fetch error[/yellow] {feed_url}: {exc}"
                 )

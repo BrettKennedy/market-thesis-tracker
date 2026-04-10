@@ -6,36 +6,24 @@ import datetime as dt
 from pathlib import Path
 
 import typer
-from jinja2 import Template
-from rich.console import Console
-
 from config_models import load_positions_config, load_risk_rules, load_ticker_baskets
 from data_store import default_db_path, read_events
+from jinja2 import Template
 from repo_helpers import get_themes_path, get_ticker_baskets_path, load_theme_definitions
 from review_helpers import (
     extract_bullets,
     extract_first_meaningful_line,
-    extract_selected_option,
     extract_section,
+    extract_selected_option,
     find_latest_review_for_theme,
 )
+from rich.console import Console
+from utils import dedupe
 
 app = typer.Typer(add_completion=False)
 console = Console()
 BASE_DIR = Path(__file__).resolve().parents[1]
 
-
-def dedupe(values: list[str]) -> list[str]:
-    """Preserve order while removing duplicates and blanks."""
-    result: list[str] = []
-    seen: set[str] = set()
-    for value in values:
-        stripped = value.strip()
-        if not stripped or stripped in seen:
-            continue
-        seen.add(stripped)
-        result.append(stripped)
-    return result
 
 
 def summarize_monthly_review(review_path: Path) -> dict[str, object]:
@@ -112,13 +100,15 @@ def main(
 - Local events window: {{ since_date }} to {{ as_of }}
 - Configured positions: {{ positions_count }}
 - Thematic sleeve target weight: {{ target_weight }}
-- Current cash reserve target / operating value: {{ target_cash_reserve }} / {{ current_cash_reserve }}
+- Current cash reserve target / operating value:
+  {{ target_cash_reserve }} / {{ current_cash_reserve }}
 
 ## Risk Guardrails
 - Max core position: {{ risk_rules.max_core_position_pct }}%
 - Max torque position: {{ risk_rules.max_torque_position_pct }}%
 - New adds require checklist: {{ risk_rules.requires_checklist_before_decision }}
-- Primary sources required for material conclusions: {{ risk_rules.requires_primary_sources_for_material_conclusions }}
+- Primary sources required for material conclusions:
+  {{ risk_rules.requires_primary_sources_for_material_conclusions }}
 
 {% for row in theme_rows %}
 ## Theme: {{ row.theme_name }}
