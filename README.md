@@ -6,6 +6,16 @@ This repository is for research, review cadence, and narrative tracking. It is *
 
 Start with [docs/User_Guide.md](docs/User_Guide.md) for day-to-day usage and [docs/Review_Workflow.md](docs/Review_Workflow.md) for the operating cadence.
 
+## Refactor Status
+
+Phase 1 of the thesis intake refactor is now in place:
+
+- `scripts/thesis_models.py` defines the canonical thesis schema
+- `theses/` contains fixture-backed example thesis files
+- `docs/Thesis_Schema.md` documents the schema and validation rules
+
+Current scripts still read `themes/themes.md` and `config/ticker_baskets.yaml` until the planned Phase 2 cutover. The thesis YAML files are the canonical design target going forward.
+
 ## Quick Start
 
 ```bash
@@ -52,6 +62,7 @@ These are the source-of-truth artifacts for this system:
 
 ```text
 config/                 Portfolio/risk configs and ticker baskets
+theses/                 Canonical thesis schema examples and future source-of-truth files
 themes/                 Current theme statements and evidence definitions
 templates/              Canonical review/checklist templates
 reviews/
