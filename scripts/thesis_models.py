@@ -9,7 +9,6 @@ from typing import Literal
 import yaml
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator, model_validator
 
-
 ThesisStatus = Literal["draft", "active"]
 BasketRole = Literal["benchmark", "core", "torque", "canary", "remove"]
 

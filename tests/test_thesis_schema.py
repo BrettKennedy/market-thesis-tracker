@@ -4,7 +4,6 @@ from pathlib import Path
 
 import pytest
 from pydantic import ValidationError
-
 from thesis_models import Thesis, load_thesis
 
 

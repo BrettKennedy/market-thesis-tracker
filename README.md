@@ -13,6 +13,7 @@ Phase 1 of the thesis intake refactor is now in place:
 - `scripts/thesis_models.py` defines the canonical thesis schema
 - `theses/` contains fixture-backed example thesis files
 - `docs/Thesis_Schema.md` documents the schema and validation rules
+- `scripts/new_thesis.py` provides an interactive thesis interview with optional AI normalization
 
 Current scripts still read `themes/themes.md` and `config/ticker_baskets.yaml` until the planned Phase 2 cutover. The thesis YAML files are the canonical design target going forward.
 
@@ -116,7 +117,17 @@ uv run python scripts/build_weekly_digest.py
 uv run python scripts/new_monthly_review.py --theme "<Theme Name>"
 uv run python scripts/new_earnings_review.py --ticker <TICKER> --theme "<Theme Name>"
 uv run python scripts/new_decision_review.py --ticker <TICKER> --theme "<Theme Name>" --decision-type Add
+uv run python scripts/new_thesis.py --no-use-ai
 ```
+
+To use AI normalization in the new thesis interview, set `MARKET_THESIS_OPENAI_API_KEY` locally first and keep it out of git:
+
+```bash
+export MARKET_THESIS_OPENAI_API_KEY="your-local-key"
+uv run python scripts/new_thesis.py --use-ai
+```
+
+The key must stay in your local environment or ignored `.env` only. Do not commit it, echo it into tracked files, or add it to tests, fixtures, or docs examples.
 
 ## Theme And Basket Setup
 

@@ -26,4 +26,7 @@ This repo is in the middle of a thesis-intake refactor.
 ## Repo hygiene
 
 - Do not commit `.claude/` or other local app state.
+- Never commit API keys or provider secrets in any form.
+- For AI intake work, read secrets only from local environment variables such as `MARKET_THESIS_OPENAI_API_KEY`.
+- Reject any edit that would place a real key in tracked code, docs, fixtures, sample config, commit history, or GitHub content.
 - Keep changes traceable and avoid mixing schema-design work with unrelated workflow refactors unless the task explicitly calls for both.
