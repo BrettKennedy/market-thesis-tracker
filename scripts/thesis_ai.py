@@ -329,6 +329,7 @@ def normalized_draft_to_thesis(
     *,
     normalized: NormalizedThesisDraft,
     thesis_id: str,
+    target_status: ThesisStatus,
 ) -> Thesis:
     basket_members: list[dict[str, object]] = []
     for member in normalized.basket.members:
@@ -350,7 +351,7 @@ def normalized_draft_to_thesis(
             "schema_version": 1,
             "thesis_id": thesis_id,
             "title": normalized.title,
-            "status": normalized.status,
+            "status": target_status,
             "content": normalized.content.model_dump(),
             "evidence": normalized.evidence.model_dump(),
             "basket": {"members": basket_members},

@@ -83,6 +83,9 @@ def _merge_bucket_members(
         if role_sets["remove"] & role_sets[role_name]:
             overlap = ", ".join(sorted(role_sets["remove"] & role_sets[role_name]))
             raise ValueError(f"Remove tickers cannot also appear in {role_name}: {overlap}")
+    if role_sets["remove"] & benchmark_set:
+        overlap = ", ".join(sorted(role_sets["remove"] & benchmark_set))
+        raise ValueError(f"Remove tickers cannot also appear in benchmark: {overlap}")
 
     conflicting_roles: list[str] = []
     role_pairs = [("core", "torque"), ("core", "canary"), ("torque", "canary")]
@@ -229,7 +232,11 @@ def build_ai_thesis(interview: dict[str, object], target_status: ThesisStatus) -
         target_status=target_status,
     )
     thesis_id = make_thesis_id(normalized.title)
-    thesis = normalized_draft_to_thesis(normalized=normalized, thesis_id=thesis_id)
+    thesis = normalized_draft_to_thesis(
+        normalized=normalized,
+        thesis_id=thesis_id,
+        target_status=target_status,
+    )
 
     source_notes = list(thesis.working_notes.source_notes)
     source_notes.extend(
