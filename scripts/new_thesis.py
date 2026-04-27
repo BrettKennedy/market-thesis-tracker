@@ -291,7 +291,6 @@ def main(
         raise typer.Exit(code=1) from exc
 
     resolved_output_dir = output_dir or (BASE_DIR / "theses")
-    resolved_output_dir.mkdir(parents=True, exist_ok=True)
     output_path = resolved_output_dir / f"{thesis.thesis_id}.yaml"
 
     console.print("[bold]Thesis preview[/bold]")
@@ -309,6 +308,7 @@ def main(
         console.print("[yellow]Canceled before writing thesis file.[/yellow]")
         raise typer.Exit(code=1)
 
+    resolved_output_dir.mkdir(parents=True, exist_ok=True)
     write_thesis_file(thesis, output_path)
     mode = "AI-normalized" if use_ai else "manual"
     console.print(f"[green]Created thesis draft:[/green] {output_path}")

@@ -344,6 +344,7 @@ def test_new_thesis_main_honors_dry_run(monkeypatch, temp_repo: Path):
 
     output_path = temp_repo / "theses" / "cloud_security_consolidation.yaml"
     assert not output_path.exists()
+    assert not output_path.parent.exists()
 
 
 def test_new_thesis_main_rejects_overwrite_without_flag(monkeypatch, temp_repo: Path):
