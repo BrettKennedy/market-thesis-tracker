@@ -330,21 +330,24 @@ def normalized_draft_to_thesis(
     normalized: NormalizedThesisDraft,
     thesis_id: str,
     target_status: ThesisStatus,
+    basket_members: list[dict[str, object]] | None = None,
 ) -> Thesis:
-    basket_members: list[dict[str, object]] = []
-    for member in normalized.basket.members:
-        role = member.role
-        is_benchmark = member.is_benchmark
-        if role == "benchmark":
-            is_benchmark = False
+    resolved_basket_members = basket_members
+    if resolved_basket_members is None:
+        resolved_basket_members = []
+        for member in normalized.basket.members:
+            role = member.role
+            is_benchmark = member.is_benchmark
+            if role == "benchmark":
+                is_benchmark = False
 
-        basket_members.append(
-            {
-                "ticker": member.ticker,
-                "role": role,
-                "is_benchmark": is_benchmark,
-            }
-        )
+            resolved_basket_members.append(
+                {
+                    "ticker": member.ticker,
+                    "role": role,
+                    "is_benchmark": is_benchmark,
+                }
+            )
 
     return Thesis.model_validate(
         {
@@ -354,7 +357,7 @@ def normalized_draft_to_thesis(
             "status": target_status,
             "content": normalized.content.model_dump(),
             "evidence": normalized.evidence.model_dump(),
-            "basket": {"members": basket_members},
+            "basket": {"members": resolved_basket_members},
             "working_notes": normalized.working_notes.model_dump(),
         }
     )

@@ -30,6 +30,43 @@ def sample_interview() -> dict[str, object]:
     }
 
 
+def sample_normalized_draft(
+    *,
+    title: str = "Cloud Security Consolidation",
+    status: str = "draft",
+    basket_members: list[dict[str, object]] | None = None,
+) -> thesis_ai.NormalizedThesisDraft:
+    return thesis_ai.NormalizedThesisDraft.model_validate(
+        {
+            "title": title,
+            "status": status,
+            "content": {
+                "thesis_statement": "Security budgets consolidate toward platforms.",
+                "why_this_matters": "It changes which software names deserve attention.",
+                "mechanism": "Platform consolidation compresses standalone feature premiums.",
+                "time_horizon": "4 to 6 quarters",
+            },
+            "evidence": {
+                "confirmation_signals": ["Large platforms keep winning bundles"],
+                "disconfirming_signals": ["Point solutions reaccelerate together"],
+                "counter_narrative": "Best-of-breed vendors keep their edge.",
+            },
+            "basket": {
+                "members": basket_members
+                or [
+                    {"ticker": "PANW", "role": "core", "is_benchmark": True},
+                    {"ticker": "CRWD", "role": "core", "is_benchmark": False},
+                ]
+            },
+            "working_notes": {
+                "research_gaps": ["Check if bundle wins are durable"],
+                "source_notes": ["AI-normalized from operator interview"],
+                "tags": ["security", "software"],
+            },
+        }
+    )
+
+
 def test_make_thesis_id_normalizes_titles():
     assert new_thesis.make_thesis_id("AI Infrastructure Buildout Is Durable") == (
         "ai_infrastructure_buildout_is_durable"
@@ -222,30 +259,9 @@ def test_normalized_draft_to_thesis_coerces_benchmark_role_flags():
 
 
 def test_normalized_draft_to_thesis_honors_requested_status():
-    normalized = thesis_ai.NormalizedThesisDraft.model_validate(
-        {
-            "title": "Cloud Security Consolidation",
-            "status": "active",
-            "content": {
-                "thesis_statement": "Security budgets consolidate toward platforms.",
-                "why_this_matters": "It changes which software names deserve attention.",
-                "mechanism": "Platform consolidation compresses standalone feature premiums.",
-                "time_horizon": "4 to 6 quarters",
-            },
-            "evidence": {
-                "confirmation_signals": ["Large platforms keep winning bundles"],
-                "disconfirming_signals": ["Point solutions reaccelerate together"],
-                "counter_narrative": "Best-of-breed vendors keep their edge.",
-            },
-            "basket": {
-                "members": [{"ticker": "PANW", "role": "core", "is_benchmark": True}]
-            },
-            "working_notes": {
-                "research_gaps": [],
-                "source_notes": [],
-                "tags": [],
-            },
-        }
+    normalized = sample_normalized_draft(
+        status="active",
+        basket_members=[{"ticker": "PANW", "role": "core", "is_benchmark": True}]
     )
 
     thesis = thesis_ai.normalized_draft_to_thesis(
@@ -255,6 +271,67 @@ def test_normalized_draft_to_thesis_honors_requested_status():
     )
 
     assert thesis.status == "draft"
+
+
+def test_build_ai_thesis_uses_operator_title_for_thesis_id(monkeypatch):
+    normalized = sample_normalized_draft(title="AI-Polished Cloud Security Consolidation")
+    monkeypatch.setattr(new_thesis, "normalize_interview_with_openai", lambda **kwargs: normalized)
+
+    thesis = new_thesis.build_ai_thesis(sample_interview(), target_status="draft")
+
+    assert thesis.thesis_id == "cloud_security_consolidation"
+    assert thesis.title == "AI-Polished Cloud Security Consolidation"
+
+
+def test_build_ai_thesis_uses_operator_basket_members(monkeypatch):
+    normalized = sample_normalized_draft(
+        basket_members=[
+            {"ticker": "PANW", "role": "benchmark", "is_benchmark": False},
+            {"ticker": "CRWD", "role": "benchmark", "is_benchmark": False},
+        ]
+    )
+    monkeypatch.setattr(new_thesis, "normalize_interview_with_openai", lambda **kwargs: normalized)
+
+    thesis = new_thesis.build_ai_thesis(sample_interview(), target_status="draft")
+
+    by_ticker = {member.ticker: member for member in thesis.basket.members}
+    assert by_ticker["PANW"].role == "core"
+    assert by_ticker["PANW"].is_benchmark is True
+    assert by_ticker["CRWD"].role == "core"
+    assert by_ticker["CRWD"].is_benchmark is False
+    assert by_ticker["ZS"].role == "torque"
+    assert by_ticker["S"].role == "canary"
+
+
+def test_build_ai_thesis_rejects_ai_added_tickers(monkeypatch):
+    normalized = sample_normalized_draft(
+        basket_members=[
+            {"ticker": "PANW", "role": "core", "is_benchmark": True},
+            {"ticker": "NVDA", "role": "core", "is_benchmark": False},
+        ]
+    )
+    monkeypatch.setattr(new_thesis, "normalize_interview_with_openai", lambda **kwargs: normalized)
+
+    with pytest.raises(ValueError, match="AI returned tickers not provided in the interview: NVDA"):
+        new_thesis.build_ai_thesis(sample_interview(), target_status="draft")
+
+
+def test_build_ai_thesis_rejects_invalid_operator_basket_before_ai(monkeypatch):
+    interview = sample_interview()
+    interview["benchmark"] = ["QQQ"]
+    interview["remove"] = ["QQQ"]
+    calls: list[object] = []
+
+    def fake_normalize(**kwargs):
+        calls.append(kwargs)
+        return sample_normalized_draft()
+
+    monkeypatch.setattr(new_thesis, "normalize_interview_with_openai", fake_normalize)
+
+    with pytest.raises(ValueError, match="Remove tickers cannot also appear in benchmark"):
+        new_thesis.build_ai_thesis(interview, target_status="draft")
+
+    assert calls == []
 
 
 def test_new_thesis_main_writes_manual_draft(monkeypatch, temp_repo: Path):

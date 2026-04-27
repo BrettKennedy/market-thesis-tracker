@@ -121,6 +121,41 @@ def _merge_bucket_members(
     return members
 
 
+def _canonical_thesis_id_from_interview(interview: dict[str, object]) -> str:
+    return make_thesis_id(str(interview["title"]).strip())
+
+
+def _canonical_basket_members_from_interview(
+    interview: dict[str, object]
+) -> list[dict[str, object]]:
+    return _merge_bucket_members(
+        benchmark=interview["benchmark"],
+        core=interview["core"],
+        torque=interview["torque"],
+        canary=interview["canary"],
+        remove=interview["remove"],
+    )
+
+
+def _validate_ai_basket_tickers(
+    normalized_members: list[object], operator_basket_members: list[dict[str, object]]
+) -> None:
+    allowed_tickers = {
+        str(member["ticker"]).strip().upper()
+        for member in operator_basket_members
+        if str(member["ticker"]).strip()
+    }
+    returned_tickers = {
+        getattr(member, "ticker", "").strip().upper()
+        for member in normalized_members
+        if getattr(member, "ticker", "").strip()
+    }
+    unexpected = sorted(returned_tickers - allowed_tickers)
+    if unexpected:
+        joined = ", ".join(unexpected)
+        raise ValueError(f"AI returned tickers not provided in the interview: {joined}")
+
+
 def conduct_thesis_interview() -> dict[str, object]:
     """Collect rough thesis inputs from the operator."""
     console.print("[bold]New Thesis Interview[/bold]")
@@ -183,7 +218,8 @@ def build_ai_prompt(interview: dict[str, object], target_status: ThesisStatus) -
 def build_manual_thesis(interview: dict[str, object], target_status: ThesisStatus) -> Thesis:
     """Convert the raw interview directly into a thesis draft."""
     title = str(interview["title"]).strip()
-    thesis_id = make_thesis_id(title)
+    thesis_id = _canonical_thesis_id_from_interview(interview)
+    basket_members = _canonical_basket_members_from_interview(interview)
     source_notes = [
         "Generated from the thesis intake interview without AI normalization.",
         f"Original rough idea: {str(interview['rough_idea']).strip()}",
@@ -206,15 +242,7 @@ def build_manual_thesis(interview: dict[str, object], target_status: ThesisStatu
                 "disconfirming_signals": interview["disconfirming_signals"],
                 "counter_narrative": str(interview["counter_narrative"]).strip(),
             },
-            "basket": {
-                "members": _merge_bucket_members(
-                    benchmark=interview["benchmark"],
-                    core=interview["core"],
-                    torque=interview["torque"],
-                    canary=interview["canary"],
-                    remove=interview["remove"],
-                )
-            },
+            "basket": {"members": basket_members},
             "working_notes": {
                 "research_gaps": interview["research_gaps"],
                 "source_notes": source_notes,
@@ -226,16 +254,19 @@ def build_manual_thesis(interview: dict[str, object], target_status: ThesisStatu
 
 def build_ai_thesis(interview: dict[str, object], target_status: ThesisStatus) -> Thesis:
     """Normalize the raw interview with AI into a thesis draft."""
+    thesis_id = _canonical_thesis_id_from_interview(interview)
+    operator_basket_members = _canonical_basket_members_from_interview(interview)
     prompt_text = build_ai_prompt(interview, target_status)
     normalized = normalize_interview_with_openai(
         prompt_text=prompt_text,
         target_status=target_status,
     )
-    thesis_id = make_thesis_id(normalized.title)
+    _validate_ai_basket_tickers(normalized.basket.members, operator_basket_members)
     thesis = normalized_draft_to_thesis(
         normalized=normalized,
         thesis_id=thesis_id,
         target_status=target_status,
+        basket_members=operator_basket_members,
     )
 
     source_notes = list(thesis.working_notes.source_notes)
