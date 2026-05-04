@@ -1,18 +1,19 @@
 # Thesis Schema
 
-This document defines the canonical thesis schema introduced in Phase 1 of the thesis intake refactor.
+This document defines the canonical thesis schema used by the merged thesis-intake flow.
 
-The goal is to establish a clean source-of-truth object now, then cut the repo over to thesis files in Phase 2.
+The intake workflow now writes `theses/*.yaml` directly, while the rest of the repo is still moving toward a full cutover.
 
 ## Canonical Status
 
-In the current repo, scripts still read `themes/themes.md` and `config/ticker_baskets.yaml` directly.
+The repo is currently split:
 
-That is temporary.
+- `scripts/new_thesis.py` writes canonical intake files in `theses/*.yaml`
+- review, ingestion, and reporting scripts still read `themes/themes.md` and `config/ticker_baskets.yaml`
 
-The Phase 1 schema is the canonical design target, and Phase 2 is responsible for cutting repo consumers over to `theses/*.yaml`.
+That is temporary. The later cutover is responsible for moving repo consumers onto thesis files as their direct input.
 
-Legacy markdown and YAML files are future optional exports, not long-term canonical inputs.
+Until then, accepted thesis changes that should affect current operations still need to be mirrored into the legacy theme and basket files.
 
 ## Top-Level Shape
 
