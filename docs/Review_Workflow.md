@@ -4,6 +4,13 @@ This workflow keeps the repo local-first, disciplined, and easy to audit later.
 
 Use this document for the operating sequence. Use `docs/User_Guide.md` for the more practical day-to-day reference.
 
+The repo currently has a split between thesis intake and operational review scripts:
+
+- thesis intake writes `theses/*.yaml`
+- review and reporting scripts still run from `themes/themes.md` and `config/ticker_baskets.yaml`
+
+If you accept a thesis change that should affect current operations, mirror it into the legacy theme and basket files before relying on the review or reporting scripts.
+
 ## Operating Order
 
 Do the work in this order:

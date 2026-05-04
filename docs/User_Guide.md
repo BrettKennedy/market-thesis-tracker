@@ -1,22 +1,104 @@
 # User Guide
 
-This repository is a local-first research system for thematic investing. It is designed to help you keep thesis definitions, basket roles, reviews, and decisions consistent over time.
+This repository currently supports two related workflows:
+
+1. Thesis intake into `theses/*.yaml`
+2. Review and reporting workflows that still run off `themes/themes.md` and `config/ticker_baskets.yaml`
+
+That split is the most important thing to understand before using the repo. A saved thesis draft does not yet rewire the rest of the system automatically.
 
 ## Start Here
 
-If this is a fresh clone, do these in order:
+If this is a fresh clone, do these first:
 
 1. Run `uv sync`.
 2. Run `uv run pre-commit install`.
-3. Replace the starter content in `themes/themes.md`.
-4. Align `config/ticker_baskets.yaml` to those exact theme names.
-5. Review `config/risk_rules.yaml`.
-6. Update `config/positions.yaml` or leave `positions: []` until funded.
-7. Generate one monthly review, one earnings review, and one decision checklist.
+3. Read `docs/Investment_Policy.md`.
+4. Decide whether you are doing thesis intake, review operations, or both.
+
+If you are using the current review and reporting scripts, also:
+
+1. Replace the starter content in `themes/themes.md`.
+2. Align `config/ticker_baskets.yaml` to those exact theme names.
+3. Review `config/risk_rules.yaml`.
+4. Update `config/positions.yaml` or leave `positions: []` until funded.
+
+## Thesis Intake Workflow
+
+Use `scripts/new_thesis.py` to create or preview canonical thesis drafts.
+
+Manual draft:
+
+```bash
+uv run python scripts/new_thesis.py --no-use-ai
+```
+
+Preview only:
+
+```bash
+uv run python scripts/new_thesis.py --no-use-ai --dry-run
+```
+
+AI-normalized draft:
+
+```bash
+export MARKET_THESIS_OPENAI_API_KEY="your-local-key"
+uv run python scripts/new_thesis.py --use-ai --target-status draft
+```
+
+Local secret rules:
+
+- keep the API key in a local shell env var or ignored `.env` only
+- `OPENAI_TOKEN_MARKET_THESIS` also works as a local fallback env var
+- never commit keys or paste them into tracked files, fixtures, docs, or GitHub comments
+
+Useful flags:
+
+- `--target-status draft|active`
+- `--dry-run`
+- `--yes`
+- `--overwrite`
+- `--output-dir <PATH>`
+
+The interview captures:
+
+- title and rough thesis statement
+- why it matters and mechanism
+- confirmation and disconfirming signals
+- strongest counter-narrative
+- benchmark, core, torque, canary, and remove tickers
+- research gaps and tags
+
+## What AI Mode Does And Does Not Do
+
+AI mode can polish the thesis title and narrative fields, but several things stay anchored to operator input:
+
+- `thesis_id` is derived from the operator-entered title, not the model-rewritten title
+- persisted basket members come from the operator-entered basket inputs
+- AI-added tickers are rejected
+- invalid operator basket overlaps fail before an AI call is made
+
+Treat the saved thesis as a draft to review, not an automatically trusted output.
+
+## After You Save A Thesis
+
+If the thesis is only for intake or future migration work, the YAML file may be enough.
+
+If the thesis should drive the current operational scripts, manually mirror the accepted changes into:
+
+- `themes/themes.md`
+- `config/ticker_baskets.yaml`
+
+Until the repo completes the later cutover, those legacy files still power review generation, narrative checks, and reporting scripts.
 
 ## What To Treat As Canonical
 
-These files define the system. Generated outputs should reference them, not replace them.
+### For Thesis Intake
+
+- `theses/*.yaml`
+- `docs/Thesis_Schema.md`
+
+### For Current Review And Reporting
 
 - `docs/README_Project_Goal.md`
 - `docs/Investment_Policy.md`
@@ -25,43 +107,24 @@ These files define the system. Generated outputs should reference them, not repl
 - `config/positions.yaml`
 - `config/risk_rules.yaml`
 - `reviews/decisions/Prediction_Log.md`
-- `templates/Monthly_Theme_Review_Template.md`
-- `templates/Company_Earnings_Scorecard_Template.md`
-- `templates/Decision_Checklist.md`
+- files in `templates/`
 
-## Daily Use
+## Daily Operating Sequence
 
-Use the repo in a simple sequence:
+Use the current repo in this order:
 
-1. Read the current thesis language in `themes/themes.md`.
-2. Check basket roles in `config/ticker_baskets.yaml`.
-3. Check `config/positions.yaml` and `config/risk_rules.yaml` if a decision may follow.
-4. Add raw notes or fetched inputs into `data/raw/` if needed.
-5. Generate the relevant review document from the canonical template.
-6. Fill the review manually with evidence and disconfirming signals.
-7. Write disposable summaries to `outputs/` only after the review exists.
+1. update the relevant canonical files
+2. create or refresh review documents
+3. ingest or review source material
+4. complete the review manually
+5. generate disposable outputs
+6. revisit or log decisions
 
-## First 30 Minutes
+Do not start with generated outputs and backfill the canonical files later.
 
-1. Run `uv sync`.
-2. Run `uv run pre-commit install`.
-3. Review `config/risk_rules.yaml` and confirm the default guardrails match how you want to operate.
-4. Open `themes/themes.md` and replace the starter theme sections with your own.
-5. Open `config/ticker_baskets.yaml` and align the basket keys and tickers with your framework.
-6. Open `config/positions.yaml`, set your sleeve target weight, and either fill live positions or leave `positions: []` until the sleeve is funded.
-7. Generate one monthly review, one earnings review, and one decision checklist.
-8. Run one local ingest command and then build one weekly digest.
+## Review And Reporting Commands
 
-## Core Commands
-
-Install dependencies and hooks:
-
-```bash
-uv sync
-uv run pre-commit install
-```
-
-Create a monthly theme review:
+Create a monthly review:
 
 ```bash
 uv run python scripts/new_monthly_review.py --theme "<Theme Name>"
@@ -83,117 +146,69 @@ Build disposable outputs:
 
 ```bash
 uv run python scripts/build_weekly_digest.py
-uv run python scripts/build_post_earnings.py --ticker VRT
+uv run python scripts/build_post_earnings.py --ticker <TICKER>
 uv run python scripts/narrative_drift.py
 ```
 
-For SEC ingestion, set a real user-agent string first:
+News and SEC ingestion:
 
 ```bash
-export MARKET_THESIS_SEC_USER_AGENT="market-thesis-tracker/0.1 your-email@example.com"
-uv run python scripts/ingest_sec.py --ticker VRT --limit 5
+uv run python scripts/ingest_news.py --feed <URL> --limit <N>
+MARKET_THESIS_SEC_USER_AGENT="market-thesis-tracker/0.1 your-email@example.com" uv run python scripts/ingest_sec.py --ticker <TICKER> --limit <N>
 ```
-
-## Recommended Workflow
-
-The operating order matters:
-
-1. update canonical files
-2. create or refresh review documents
-3. ingest new source material
-4. generate disposable outputs
-5. make or revisit decisions
-
-Do not reverse that order unless you are deliberately doing exploratory work.
-
-When a theme changes:
-
-- Update `themes/themes.md` first.
-- Update `config/ticker_baskets.yaml` if basket roles changed.
-- Do not patch downstream reviews first and backfill canonical files later.
-
-When a company reports earnings:
-
-- Create an earnings review from `templates/Company_Earnings_Scorecard_Template.md`.
-- Use primary materials first: release, call transcript, filing, shareholder letter.
-- Only after the scorecard is written should you update basket role or decision files.
-
-Before any buy, add, trim, cut, or watch-only action:
-
-- Create a decision checklist from `templates/Decision_Checklist.md`.
-- Fill in both confirming and disconfirming evidence.
-- Check the decision against `docs/Investment_Policy.md` and `config/risk_rules.yaml`.
-
-Once per month:
-
-- Create one monthly review per active theme.
-- Update `reviews/decisions/Prediction_Log.md` with any major prediction that can be judged later.
-- Generate a weekly or monthly digest only after the underlying reviews are current.
 
 ## Weekly Loop
 
-- Run `scripts/ingest_news.py` for the feeds you care about.
-- Review new rows in `data/raw/news/` only if the SQLite-backed digest points to something worth deeper work.
-- Refresh the relevant monthly review if the evidence set changed materially.
-- Build `outputs/weekly/weekly_digest_<date>.md` after the review work is current.
+- ingest or review the latest source material
+- refresh the relevant monthly review if the evidence changed materially
+- update `reviews/decisions/Prediction_Log.md` when a prediction became more concrete or more testable
+- generate a digest only after the underlying review is current
 
 ## Post-Earnings Loop
 
-- Ingest the current SEC/fundamental inputs you care about.
-- Create a new earnings review with `scripts/new_earnings_review.py`.
-- Fill the scorecard from primary materials first.
-- Run `scripts/build_post_earnings.py --ticker <TICKER>` to produce a disposable summary for decision review.
+- ingest the new filing and supporting materials
+- create the earnings review if it does not exist yet
+- complete the scorecard from primary sources
+- generate the post-earnings summary only after the scorecard is written
 
 ## Pre-Decision Loop
 
-- Confirm the latest monthly theme review exists and is current.
-- Confirm the relevant earnings review exists if the company recently reported.
-- Create a decision checklist with `scripts/new_decision_review.py`.
-- Compare the decision against `docs/Investment_Policy.md`, `config/risk_rules.yaml`, and `config/positions.yaml` before acting.
+- confirm the latest theme review exists and is current
+- confirm the latest relevant earnings review exists when applicable
+- create and complete a decision checklist
+- compare the action against `docs/Investment_Policy.md`, `config/risk_rules.yaml`, and `config/positions.yaml`
+
+Do not let a generated summary substitute for a completed checklist.
 
 ## Best Practices
 
-- Keep one canonical name for each theme. Use the exact names from `themes/themes.md`.
-- Keep theme names plain and stable. Renaming a theme creates avoidable drift across reviews.
-- Treat `templates/` as durable forms and `reviews/` as completed records.
-- Treat `outputs/` as disposable summaries, not as source-of-truth analysis.
-- Record disconfirming evidence even when conviction is rising.
-- Prefer primary sources over press summaries for any important conclusion.
-- Keep raw fetched data in `data/raw/` and derived SQLite data in `data/processed/`.
-- Make small, traceable edits to canonical files instead of broad rewrites.
+- keep one stable canonical name for each theme
+- keep `theses/*.yaml` and the legacy theme and basket files aligned when the same thesis is operationally active
+- treat `templates/` as durable forms and `reviews/` as completed records
+- treat `outputs/` as disposable summaries, not as evidence records
+- record disconfirming evidence even when conviction is rising
+- prefer primary sources over summaries for material conclusions
+- make small, traceable edits to canonical files instead of broad rewrites
 
-## Using ChatGPT Projects And Codex Well
+## Useful Prompting Patterns
 
 Good prompts:
 
-- "Read `themes/themes.md` and `config/ticker_baskets.yaml`, then draft a monthly review for Theme X using the exact structure from `templates/Monthly_Theme_Review_Template.md`."
-- "Read the latest earnings release and help me fill `reviews/earnings/...` without inventing facts or changing the thesis language."
+- "Read `theses/ai_infrastructure_buildout_is_durable.yaml` and help me improve the draft without inventing new tickers."
+- "Read `themes/themes.md` and `config/ticker_baskets.yaml`, then draft a monthly review using the existing template."
 - "Compare this proposed decision against `docs/Investment_Policy.md`, `config/risk_rules.yaml`, and the latest monthly review."
-- "Given `config/positions.yaml` and `config/risk_rules.yaml`, point out where this draft decision would violate my own operating rules."
 
-Good constraints to include:
+Good constraints:
 
-- Require references to canonical files.
-- Require explicit disconfirming evidence.
-- Forbid new scoring systems unless you explicitly asked for them.
-- Keep outputs in markdown and local files.
+- require references to canonical files
+- require explicit disconfirming evidence
+- forbid invented tickers or hidden scoring systems
+- keep disposable summaries in `outputs/`
 
 ## Anti-Patterns
 
-- Letting an LLM rewrite `themes/themes.md` casually without a deliberate thesis change.
-- Creating alternate templates outside `templates/`.
-- Using `outputs/` as if they were canonical records.
-- Making position decisions without a checklist and current theme review.
-- Letting generated summaries override primary-source evidence.
-- Expanding the repo into a trading system, ranking engine, or automation stack.
-
-## What The Scripts Do Today
-
-- `scripts/new_*` create review documents from canonical templates.
-- `scripts/ingest_sec.py` writes raw SEC filing snapshots and normalized SQLite events.
-- `scripts/ingest_news.py` writes raw RSS/news snapshots and normalized SQLite events.
-- `scripts/build_weekly_digest.py` reads the latest monthly reviews plus local SQLite events and produces a weekly digest.
-- `scripts/build_post_earnings.py` reads the latest earnings review for a ticker and produces a disposable summary.
-- `scripts/narrative_drift.py` runs deterministic checks against canonical theme language and required review sections.
-
-The repo still uses conservative bootstrap examples. Replace them with live primary-source review work before using the system for real add/trim decisions.
+- assuming a thesis YAML file automatically updates `themes/themes.md` or `config/ticker_baskets.yaml`
+- letting an LLM rewrite operational basket membership without explicit review
+- using `outputs/` as source-of-truth analysis
+- making position decisions without a checklist and current review
+- letting generated summaries override primary-source evidence

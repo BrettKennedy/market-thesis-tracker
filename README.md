@@ -1,35 +1,76 @@
 # Market Thesis Tracker
 
-Local-first thematic investing research system focused on decision discipline.
+Local-first thematic investing research system focused on thesis discipline, review quality, and clear audit trails.
 
-This repository is for research, review cadence, and narrative tracking. It is **not** a trading bot.
+This repository is for research and decision support. It is not a trading bot.
 
 Start with [docs/User_Guide.md](docs/User_Guide.md) for day-to-day usage and [docs/Review_Workflow.md](docs/Review_Workflow.md) for the operating cadence.
 
-## Refactor Status
+## Current State
 
-Phase 1 of the thesis intake refactor is now in place:
+The repo currently has two active layers:
 
-- `scripts/thesis_models.py` defines the canonical thesis schema
-- `theses/` contains fixture-backed example thesis files
-- `docs/Thesis_Schema.md` documents the schema and validation rules
-- `scripts/new_thesis.py` provides an interactive thesis interview with optional AI normalization
+- Thesis intake layer:
+  - `scripts/new_thesis.py` creates thesis drafts in `theses/*.yaml`
+  - `scripts/thesis_models.py` and `docs/Thesis_Schema.md` define the canonical thesis schema
+- Review and reporting layer:
+  - current review, ingestion, and reporting scripts still read `themes/themes.md` and `config/ticker_baskets.yaml`
+  - review generators still write into `reviews/` from `templates/`
 
-Current scripts still read `themes/themes.md` and `config/ticker_baskets.yaml` until the planned Phase 2 cutover. The thesis YAML files are the canonical design target going forward.
+That split matters. Saving a thesis YAML file does not automatically update the legacy theme and basket files yet. If a thesis should drive the current review or reporting workflow, mirror the accepted changes into `themes/themes.md` and `config/ticker_baskets.yaml`.
 
 ## Quick Start
+
+Set up the local environment:
 
 ```bash
 uv sync
 uv run pre-commit install
 ```
 
-Then personalize these two files first:
+Then choose the workflow you need.
 
-- `themes/themes.md`
-- `config/ticker_baskets.yaml`
+### Thesis Intake
 
-After that, create your first review documents:
+Create a manual thesis draft:
+
+```bash
+uv run python scripts/new_thesis.py --no-use-ai
+```
+
+Preview without writing:
+
+```bash
+uv run python scripts/new_thesis.py --no-use-ai --dry-run
+```
+
+Use AI normalization with a local-only API key:
+
+```bash
+export MARKET_THESIS_OPENAI_API_KEY="your-local-key"
+uv run python scripts/new_thesis.py --use-ai
+```
+
+The script also accepts `OPENAI_TOKEN_MARKET_THESIS` as a local fallback env var. Never commit either key, put it in tracked config, or include it in docs, tests, fixtures, or GitHub comments.
+
+Useful intake flags:
+
+- `--target-status draft|active`
+- `--dry-run`
+- `--yes`
+- `--overwrite`
+- `--output-dir <PATH>`
+
+### Review And Reporting
+
+If you want the current review and reporting scripts to work end to end, set up the legacy runtime inputs:
+
+- replace the starter content in `themes/themes.md`
+- align `config/ticker_baskets.yaml` to those exact theme names
+- review `config/risk_rules.yaml`
+- update `config/positions.yaml` or leave `positions: []` until funded
+
+Then generate the review documents you need:
 
 ```bash
 uv run python scripts/new_monthly_review.py --theme "<Theme Name>"
@@ -37,16 +78,17 @@ uv run python scripts/new_earnings_review.py --ticker <TICKER> --theme "<Theme N
 uv run python scripts/new_decision_review.py --ticker <TICKER> --theme "<Theme Name>" --decision-type Add
 ```
 
-## Purpose
+## Canonical Files Today
 
-- Track durable market themes and supporting evidence.
-- Keep basket definitions consistent and reviewable.
-- Improve judgment quality through repeatable review templates.
-- Log predictions and decision rationale for later calibration.
+These are the main files to treat as source-of-truth today, grouped by role.
 
-## Canonical Files
+### Thesis Intake Canonical Files
 
-These are the source-of-truth artifacts for this system:
+- `theses/*.yaml`
+- `scripts/thesis_models.py`
+- `docs/Thesis_Schema.md`
+
+### Review And Reporting Canonical Files
 
 - `docs/README_Project_Goal.md`
 - `docs/Investment_Policy.md`
@@ -59,123 +101,71 @@ These are the source-of-truth artifacts for this system:
 - `templates/Company_Earnings_Scorecard_Template.md`
 - `templates/Decision_Checklist.md`
 
+## Core Commands
+
+Use `uv run python ...` from repo root.
+
+```bash
+uv run python scripts/new_thesis.py --no-use-ai
+uv run python scripts/new_thesis.py --use-ai --target-status draft
+uv run python scripts/new_monthly_review.py --theme "<Theme Name>"
+uv run python scripts/new_earnings_review.py --ticker <TICKER> --theme "<Theme Name>"
+uv run python scripts/new_decision_review.py --ticker <TICKER> --theme "<Theme Name>" --decision-type Add
+uv run python scripts/ingest_news.py --feed https://www.sec.gov/news/pressreleases.rss --limit 5
+MARKET_THESIS_SEC_USER_AGENT="market-thesis-tracker/0.1 your-email@example.com" uv run python scripts/ingest_sec.py --ticker <TICKER> --limit 5
+uv run python scripts/build_weekly_digest.py
+uv run python scripts/build_post_earnings.py --ticker <TICKER>
+uv run python scripts/narrative_drift.py
+```
+
 ## Repository Structure
 
 ```text
-config/                 Portfolio/risk configs and ticker baskets
-theses/                 Canonical thesis schema examples and future source-of-truth files
-themes/                 Current theme statements and evidence definitions
-templates/              Canonical review/checklist templates
+config/                 Portfolio, risk, and legacy basket inputs
+theses/                 Canonical thesis draft files
+themes/                 Legacy theme statements used by current runtime scripts
+templates/              Canonical review and checklist templates
 reviews/
   monthly/              Monthly theme reviews created from template
   earnings/             Post-earnings reviews created from template
   decisions/            Decision checklists and prediction log
 prompts/                Reusable prompt text for LLM-assisted synthesis
-scripts/                Thin local automation scripts (no scheduling/brokers)
+scripts/                Local automation scripts
 data/
-  raw/                  Raw fetched inputs (local files)
+  raw/                  Raw fetched inputs
   processed/            Local SQLite DB and derived datasets
-outputs/                Generated markdown reports (ignored in git)
-docs/                   Goals, policy, and workflow documentation
+outputs/                Generated markdown summaries
+docs/                   Policy, workflow, and schema documentation
 ```
 
-## Local Setup (uv)
+## Using ChatGPT Projects And Codex
 
-1. Install `uv` if needed:
+Good collaboration patterns:
 
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
+- point the model at the exact canonical files you want used
+- require explicit disconfirming evidence and source references
+- keep generated summaries in `outputs/` unless you are intentionally editing canonical files
+- remember that `theses/*.yaml` and `themes/themes.md` are not auto-synced yet
+
+Example prompt:
+
+```text
+Read theses/ai_infrastructure_buildout_is_durable.yaml, themes/themes.md,
+config/ticker_baskets.yaml, and docs/Investment_Policy.md. Help me draft a
+review update without inventing facts or changing tickers that are not already
+in the repo.
 ```
 
-2. Create/sync environment:
-
-```bash
-uv sync
-```
-
-3. Install git hooks:
-
-```bash
-uv run pre-commit install
-```
-
-4. Validate the local setup:
+## Local Validation
 
 ```bash
 uv run pytest
 uv run pre-commit run --all-files
 ```
 
-## Running Core Scripts
+## Intentionally Out Of Scope
 
-Use `uv run python ...` from repo root.
-
-```bash
-uv run python scripts/ingest_news.py --feed https://www.sec.gov/news/pressreleases.rss --limit 5
-MARKET_THESIS_SEC_USER_AGENT="market-thesis-tracker/0.1 your-email@example.com" uv run python scripts/ingest_sec.py --ticker <TICKER> --limit 5
-uv run python scripts/build_weekly_digest.py
-uv run python scripts/new_monthly_review.py --theme "<Theme Name>"
-uv run python scripts/new_earnings_review.py --ticker <TICKER> --theme "<Theme Name>"
-uv run python scripts/new_decision_review.py --ticker <TICKER> --theme "<Theme Name>" --decision-type Add
-uv run python scripts/new_thesis.py --no-use-ai
-```
-
-To use AI normalization in the new thesis interview, set `MARKET_THESIS_OPENAI_API_KEY` locally first and keep it out of git:
-
-```bash
-export MARKET_THESIS_OPENAI_API_KEY="your-local-key"
-uv run python scripts/new_thesis.py --use-ai
-```
-
-The key must stay in your local environment or ignored `.env` only. Do not commit it, echo it into tracked files, or add it to tests, fixtures, or docs examples.
-
-## Theme And Basket Setup
-
-Edit `themes/themes.md` and replace the starter sections with your actual theme definitions.
-
-Then edit `config/ticker_baskets.yaml` so:
-
-- theme keys exactly match `themes/themes.md`
-- tickers are upper-case
-- empty categories remain as `[]`
-
-If you want private working copies of prior theme or basket files, keep them as `themes/bk_themes.md` and `config/bk_ticker_baskets.yaml`. Those files are gitignored and are not read by the scripts.
-
-## Generating Review Docs From Templates
-
-- Monthly theme review: `scripts/new_monthly_review.py` -> `reviews/monthly/`
-- Earnings scorecard: `scripts/new_earnings_review.py` -> `reviews/earnings/`
-- Decision checklist: `scripts/new_decision_review.py` -> `reviews/decisions/`
-- News/SEC ingestion: writes raw JSONL snapshots under `data/raw/` and normalized event rows into `data/processed/research.db`
-- Reporting scripts: read the latest reviews plus SQLite events and write disposable markdown to `outputs/`
-
-All generators copy from canonical files in `templates/`.
-
-## Using With ChatGPT Projects + Codex
-
-- Keep this repo as your local source of truth.
-- Use ChatGPT/Codex for drafting and analysis against files in this repo.
-- Paste generated outputs back into `reviews/` or `outputs/` with clear dates.
-- Require explicit evidence references to canonical docs/templates when making changes.
-
-Use prompts that point to the canonical files directly. Example:
-
-```text
-Read themes/themes.md, config/ticker_baskets.yaml, docs/Investment_Policy.md,
-and the latest monthly review for <Theme Name>. Help me draft an update using
-the existing template structure. Do not invent facts, score changes, or new
-strategy rules.
-```
-
-## Intentionally Out of Scope
-
-- Trade execution and broker APIs
-- Auto-ranking or hidden strategy logic
-- Always-on services, schedulers, workflow engines
-- Vector DBs, agent frameworks, frontend stacks, Docker, or Airflow
-
-## Remaining TODO Boundaries
-
-- Fill `config/positions.yaml` with your actual live holdings and sleeve target weight.
-- Replace any bootstrap example reviews with current primary-source earnings and filing work.
-- Set a real SEC user-agent string in `MARKET_THESIS_SEC_USER_AGENT` before relying on SEC ingestion.
+- trade execution and broker APIs
+- hidden ranking or scoring engines
+- always-on workflow infrastructure
+- frontend apps, agent frameworks, or deployment-heavy stacks
