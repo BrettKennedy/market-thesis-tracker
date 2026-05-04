@@ -35,7 +35,7 @@ class ThemeBasket(BaseModel):
         if value is None:
             return []
         if not isinstance(value, list):
-            raise TypeError("basket values must be lists")
+            raise ValueError("basket values must be lists")
         return [_normalize_ticker(str(item)) for item in value]
 
 

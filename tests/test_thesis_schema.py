@@ -175,3 +175,25 @@ def test_invalid_status_values_are_rejected():
                 "content": {"thesis_statement": "A rough idea worth capturing."},
             }
         )
+
+
+def test_scalar_list_fields_raise_validation_errors():
+    with pytest.raises(ValidationError):
+        Thesis.model_validate(
+            {
+                "schema_version": 1,
+                "thesis_id": "scalar_list_theme",
+                "title": "Scalar List Theme",
+                "status": "draft",
+                "content": {"thesis_statement": "A rough idea worth capturing."},
+                "evidence": {"confirmation_signals": "not-a-list"},
+            }
+        )
+
+
+def test_load_thesis_rejects_non_mapping_yaml(tmp_path: Path):
+    thesis_path = tmp_path / "broken.yaml"
+    thesis_path.write_text("- not\n- a\n- mapping\n", encoding="utf-8")
+
+    with pytest.raises(ValidationError):
+        load_thesis(thesis_path)

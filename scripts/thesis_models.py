@@ -27,7 +27,7 @@ def _normalize_string_list(value: object) -> list[str]:
     if value is None:
         return []
     if not isinstance(value, list):
-        raise TypeError("value must be a list")
+        raise ValueError("value must be a list")
 
     normalized: list[str] = []
     for item in value:
@@ -116,7 +116,7 @@ class ThesisBasket(BaseModel):
         if value is None:
             return []
         if not isinstance(value, list):
-            raise TypeError("members must be a list")
+            raise ValueError("members must be a list")
         return value
 
     @model_validator(mode="after")
@@ -227,7 +227,19 @@ def load_thesis(path: Path) -> Thesis:
         payload = yaml.safe_load(handle) or {}
 
     if not isinstance(payload, dict):
-        raise TypeError(f"Thesis file {path} must contain a mapping at the top level")
+        error_message = f"Thesis file {path} must contain a mapping at the top level"
+        raise ValidationError.from_exception_data(
+            "Thesis",
+            [
+                {
+                    "type": "value_error",
+                    "loc": (),
+                    "msg": f"Value error, {error_message}",
+                    "input": payload,
+                    "ctx": {"error": ValueError(error_message)},
+                }
+            ],
+        )
 
     thesis = Thesis.model_validate(payload)
     if path.suffix in {".yaml", ".yml"} and path.stem != thesis.thesis_id:
