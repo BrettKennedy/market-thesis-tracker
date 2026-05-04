@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+import pytest
 from config_models import (
+    ThemeBasket,
     load_positions_config,
     load_risk_rules,
     load_ticker_baskets,
     load_ticker_theme_map,
 )
+from pydantic import ValidationError
 
 
 def test_repo_configs_parse(repo_root):
@@ -26,3 +29,8 @@ def test_ticker_theme_map_uses_canonical_theme_names(temp_repo):
 
     assert theme_map["VRT"] == ["AI Infrastructure Buildout Is Durable"]
     assert theme_map["NOW"] == ["SaaS Shakeout Is Real but Selective"]
+
+
+def test_theme_basket_rejects_scalar_basket_values_with_validation_error():
+    with pytest.raises(ValidationError):
+        ThemeBasket.model_validate({"benchmark": "SPY"})

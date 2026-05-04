@@ -1,0 +1,79 @@
+schema_version: 1
+thesis_id: ai_infrastructure_buildout_is_durable
+title: AI Infrastructure Buildout Is Durable
+status: active
+content:
+  thesis_statement: >
+    Over the next 4 to 6 quarters, AI-related data-center spending remains
+    net expansionary because the binding constraints are physical: electrical
+    capacity, thermal management, network fabric, and optical interconnect.
+    The thesis does not require a single model winner. It requires that
+    infrastructure bottlenecks remain real across multiple layers of the stack.
+  why_this_matters: >
+    This theme is useful only if it captures demand that survives model
+    leadership changes. The goal is to own the most durable beneficiaries of
+    AI buildout rather than chase whichever model company currently has
+    momentum.
+  mechanism: >
+    Physical bottlenecks in power, cooling, networking, optics, and capacity
+    ownership should keep spending durable across multiple parts of the stack
+    even as model leadership rotates.
+  time_horizon: 4 to 6 quarters
+evidence:
+  confirmation_signals:
+    - Power and cooling vendors report sustained demand, order strength, or backlog support
+    - Networking vendors continue to cite real AI cluster growth rather than generic AI interest
+    - Optics and interconnect vendors show ramp, mix improvement, or margin support tied to AI deployments
+    - Data-center capacity remains constrained or strategically valuable in key markets
+    - Strength persists across at least three of these four layers: power, networking, optics, capacity owners
+  disconfirming_signals:
+    - Two or more direct-exposure names guide down on AI demand in the same review cycle
+    - AI demand language weakens across several sub-sectors at once
+    - Power or cooling lead times normalize quickly and backlog rolls over
+    - Optics or interconnect ramps stall or show broad digestion
+    - REIT leasing weakens while direct vendors remain promotional
+  counter_narrative: >
+    The buildout is front-loaded rather than durable. Hyperscalers and
+    enterprises over-ordered, efficiency improves faster than expected, and
+    the market is mistaking one-time cluster land grabs for a multi-year
+    compounding cycle.
+basket:
+  members:
+    - ticker: VRT
+      role: core
+      is_benchmark: true
+    - ticker: ANET
+      role: core
+      is_benchmark: true
+    - ticker: ETN
+      role: core
+      is_benchmark: true
+    - ticker: PWR
+      role: core
+    - ticker: AAOI
+      role: torque
+    - ticker: ALAB
+      role: torque
+    - ticker: CRDO
+      role: torque
+    - ticker: LITE
+      role: torque
+    - ticker: DLR
+      role: canary
+    - ticker: EQIX
+      role: canary
+    - ticker: SMCI
+      role: canary
+    - ticker: COHR
+      role: canary
+working_notes:
+  research_gaps:
+    - Track whether power and cooling bottlenecks remain durable across multiple earnings cycles
+    - Watch for evidence that optics demand is pulling forward rather than compounding
+  source_notes:
+    - Derived from tests/fixtures/themes.md and tests/fixtures/ticker_baskets.yaml
+    - Mechanism is made explicit here even though it was previously embedded in the thesis prose
+  tags:
+    - ai
+    - infrastructure
+    - data_centers

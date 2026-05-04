@@ -1,0 +1,73 @@
+schema_version: 1
+thesis_id: saas_shakeout_is_real_but_selective
+title: SaaS Shakeout Is Real but Selective
+status: active
+content:
+  thesis_statement: >
+    Over the next 4 to 6 quarters, AI does not break software broadly. It
+    shifts value toward workflow owners, system-of-record platforms, and
+    multi-product suites with embedded distribution. The likely losers are
+    narrower point solutions with weaker pricing power, lower switching costs,
+    and less control of the core workflow.
+  why_this_matters: >
+    This theme is meant to separate durable software franchises from software
+    names that look fine until retention, bookings, or monetization quality
+    deteriorate. It is not a blanket short thesis on software.
+  mechanism: >
+    AI intensifies software competition by compressing feature differentiation
+    and favoring platform owners with embedded distribution, deeper workflow
+    control, and stronger pricing power.
+  time_horizon: 4 to 6 quarters
+evidence:
+  confirmation_signals:
+    - Platform and workflow owners maintain growth, cash flow, and customer expansion
+    - Challenged point solutions show weaker retention, billings, or longer deal cycles
+    - AI features become table stakes rather than durable pricing levers
+    - Customers rationalize software spend and consolidate vendors
+    - Clear separation appears between winners and challenged names rather than broad software strength
+  disconfirming_signals:
+    - Supposedly challenged names reaccelerate together
+    - Net retention or billings improve across the weaker cohort at the same time
+    - AI clearly expands software budgets across the board rather than intensifying competition
+    - Sales efficiency improves broadly in previously challenged names
+    - Platform winners fail to separate on growth, obligations, or cash generation
+  counter_narrative: >
+    AI expands software value creation instead of compressing it. Incumbents
+    and even many point solutions absorb AI quickly enough that the feared
+    shakeout does not arrive, or arrives much later than expected.
+basket:
+  members:
+    - ticker: NOW
+      role: core
+      is_benchmark: true
+    - ticker: CRM
+      role: core
+      is_benchmark: true
+    - ticker: MSFT
+      role: core
+      is_benchmark: true
+    - ticker: HUBS
+      role: core
+    - ticker: ADBE
+      role: canary
+    - ticker: MDB
+      role: canary
+    - ticker: TWLO
+      role: canary
+    - ticker: SNOW
+      role: canary
+    - ticker: DDOG
+      role: canary
+    - ticker: ORCL
+      role: remove
+working_notes:
+  research_gaps:
+    - Track whether AI spend shifts toward platforms or simply lifts the whole software budget
+    - Watch for billing or retention stabilization across the weaker cohort
+  source_notes:
+    - Derived from tests/fixtures/themes.md and tests/fixtures/ticker_baskets.yaml
+    - Mechanism is made explicit here even though it was previously embedded in the thesis prose
+  tags:
+    - software
+    - saas
+    - ai

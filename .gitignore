@@ -18,6 +18,7 @@ build/
 .venv/
 .env
 .env.*
+.claude/
 
 # Local databases and derived artifacts
 *.db
